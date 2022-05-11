@@ -1,0 +1,3718 @@
+! ---------------------------------------------------------------------------- !
+!
+! TEMPORAL WAKE - ENTANGLED - Entangled
+! PROGRAMMER: Dark Star
+! DATE STARTED:  5-August-2016
+! DATE COMPLETED: Undetermined
+! RELEASE DATE TARGET:  28-September-2020
+!
+! The times are for October 10th / Location: Pittsburg - 6:48 Sunset - 7:27 Sunrise
+!
+! BLURB: Caught up in a time-travel experiment gone wrong, the actions you perform in the past will ripple
+!        forward in time. Can you find your way back without unraveling the universe? A small town stirs in your wake.
+
+! SYNOPSIS: In a small mid-western town you're a part of an experiment gone wrong.
+!           Through quantum entanglement you find yourself 40 years in the past.
+!           This is a game about character interaction, cause and effect.
+
+! Treaty of Babel
+! command line: bable -ifid entangled.z8
+
+  Array UUID_ARRAY string "UUID://ZCODE-1-200928-E691//";
+  #ifdef UUID_ARRAY; #endif;
+
+  Constant Story "ENTANGLED";
+  Constant Headline "^Written by Dark Star
+                     ^Copyright (c) 2020 by Infodarkness Productions
+                     ^(First-time players should type ~ABOUT~)^";
+
+  Constant AMUSING_PROVIDED;
+  Constant DEATH_MENTION_UNDO;
+  Constant MAX_SCORE=50;
+  Constant MAX_CARRIED=50;
+  Constant GTOTALROOMS=36;
+  Constant GTOTALOBJS=23;
+  Constant GPLOPCODE=45;  ! Instructions Of Z-Code
+  Constant GOPCPH=1;
+  Constant GOPCSPH=1;
+  Constant GOPCODE=9;
+  Constant GTWORDS=374;   ! Dictionary Entries 1,374
+  Constant DIALECT_US;
+  Constant PAST=1980;
+  Constant PRESENT=2020;
+!  Constant RESETENDGAME=false;
+
+! Global Variables - 14 left / Max 233 - 219
+! Started out 5:26
+! 5:58 or 6:02
+
+  Global iSaveHour=0;           ! Saves Time when the player enters the basement
+  Global iSaveMinute=0;         ! Saves Time when the player enters the basement
+  Global iSaveAMPM=0;           ! Saves Time when the player enters the basement
+  Global iMinute=2;             ! keeps track of the minute
+  Global iHour=6;               ! keeps track of the hour
+  Global iAMPM=1;               ! keeps track of AM=0 & PM=1
+  Global iWait=0;               ! Reusable wait Variable for Daemons
+  Global iAskWait=0;            ! Reusable for bartenders, used in asking the PC if they want a drink - Response Yes/No
+  Global iAskSecondWait=0;      ! Used in Phil for asking for a drink a second time - Response No
+  Global iAskRestless=0;        ! Used in Madame Sorra - Listens for Spirits Restless - Response in Sorry
+  Global iDisplayMinute=0;      ! adds 1 to the minute to keep the clock and watch in sync
+  Global iDisplayHour=0;        ! same as minute but for hours
+  Global iRoom=0;               ! counts the number of rooms
+  Global iTime=PRESENT;         ! keeps track of what time period the player is in
+  Global iMarkReaction=2;       ! Mark's replys change with this
+  Global iScientist=0;          ! Gives the scientist a few turns before they "bump" into the player
+  Global iAttendantCall=0;      ! Mark says this as he calls the cops
+  Global iCharacterTalkDelay=0; ! Gives the player a chance to respond to answer from characters
+  Global iNancyConversation=0;  ! Used to count how long the player has talked to Nancy
+  Global iOldManAnger=0;        ! Tests to see if the old man in The Tavern gets mad at the PC
+  Global iNickLeave=0;          ! Tests to see when Nick should leave
+  Global iLeaveChoice=0;        ! Used in Nick's explaination for leaving the bar
+  Global iNickGone=0;           ! Used to return Nick back to the bar after he leaves
+  Global iAmyConversation=0;    ! Used to count how long the player has talked to Amy
+  Global iPeople=0;             ! Used to count how many people the player has met
+  Global iHaveAny=0;            ! Used in Eddie if he asks the player if they have any - Response Yes/No
+  Global iCuratorLeaving=0;     ! Used in the Back Alley, after the curator breaks the statue
+  Global iAskStay=0;            ! Used in Sarah - Listens for Staying in the City - Response Yes/No
+  Global iAskGo=0;              ! Used in Sarah - Listens for Leaving the City - Response Yes/No
+  Global iRepeat=0;             ! Used in Sarah for the Yes Response
+  Global iTalkAllNight=0;       ! Used in Mark, asks if player is going to talking all night - Response Yes/No
+  Global iBuySomething=0;       ! Used in Mark if he asks the player to move on - Response Yes/No
+  Global iAskCity=0;            ! Used in Nancy when asking her about the city - Response Yes/No
+  Global iAskCar=0;             ! Used in Jerry when asking her about the car - Response Yes/No
+  Global iAskCoke=0;            ! Used in Amy when she asks the player if they want a Coke - Response Yes/No
+  Global iAskEmpire=0;          ! Used in Amy when the player asks her about Empire Strikes Back
+  Global iAmyLookUp=0;          ! Used in Amy, returns her to reading the comic
+  Global iAskComic=0;           ! Used in Amy, when she asks if the player is going to buy a comic
+  Global iAskCats=0;            ! Used in Jerry, when the player asks him about Sorra
+  Global iDollarTake=0;         ! Used in the Dollar's Daemon, Simulates Eddie taking the dollar in 5 turns
+  Global iPhilWashDish=10;      ! Used to trigger Phil smoking before going back to the dishes
+  Global iAlleyBartender=0;     ! Used in Alley Bar Description to change Phil in the description
+  Global iBarTenderAction=10;   ! Used to Trigger the Alley Bar Description for Phil
+  Global iHourHarryLeaves=0;    ! Used to set when Harry will leave the Tavern
+  Global iAskKiss=0;            ! Used in Old Amy when asking about the house and then asking about Jerry
+  Global iAskBook=0;            ! Used in Old Amy when she asks the player if they've heard of On The Road
+  Global iAskTom=0;             ! Used in Tom when the player asks him about shower
+  Global iAskXMenComic=0;       ! Used in Amy when the player says YES to Buying the X-Men Comic
+  Global iPushTom=0;            ! Used when the player pushes Tom
+  Global iAskWatch=0;           ! Used in the Watch when Shown to Amy
+  Global iAskPlug=0;            ! Used in Jerry when asked about the spark plug
+  Global iAskDoor=0;            ! Used when Sarah ask the player to use the front door
+  Global iAskBowling=0;         ! Used when Nancy asks the player if they're gong to bowl
+  Global kidTest=0;             ! Used to advance the kids conversation
+  Global iJerryResponse=0;      ! Used in Jerry to escalate his responses
+  Global iDontTouchCat=0;       ! Used to escalate Sarah when dealing with the cat being pushed, ect.
+  Global iAskMoveBlock=0;       ! Used to move Sarah back to the counter after blocking the player from the cat
+  Global iListenLeaving=0;      ! Fixes listening to the curator when she breaks the cat outside the Gallery
+  Global iAskIntro=0;           ! Used in Nancy when she asks that first question about hell and the number
+  Global iAskFriend=0;          ! Used in Nancy when she talks about California, Yes/No
+  Global iExtraCash=0;          ! Used in Eddie when he asks the player if they have an cash
+  Global iOldAmyAskSelf=0;      ! Used when you ask Old Amy about herself
+  Global iAskClothes=0;         ! Used in Old Nick when the players asks about clothes - Yes/No
+  Global iTellMarkEvict=0;      ! Used in Tell Mark about Eviction
+  Global iTellNickEvict=0;      ! Used in Tell Nick about Eviction
+  Global iAskSam=0;             ! Used in Ask About Sam every 3rd time to tell the player Sam isn't in the past
+
+  Replace DrawStatusLine;
+  Replace FullScoreSub;
+
+  Replace DoMenu;
+  Replace LowKey_Menu;
+
+  Include "Parser";
+  Include "VerbLib";
+
+  Include "utility";
+  Include "domenu";
+  Include "Altmenu";
+  Include "Hints";
+
+  Release 1;
+
+! ---------------------------------------------------------------------------- !
+!       ABBREVIATIONS
+!
+
+  Abbreviate ". ";
+  Abbreviate ", ";
+  Abbreviate " the ";
+  Abbreviate "You";
+  Abbreviate "The";
+  Abbreviate "It doesn't belong in there.";
+  Abbreviate "'t do that";
+  Abbreviate "'t need to";
+  Abbreviate "I don";
+  Abbreviate "** Spoilers to follow **";
+  Abbreviate "ou ";
+  Abbreviate "'s ";
+  Abbreviate "'t ";
+  Abbreviate "ing ";
+  Abbreviate "ther";
+  Abbreviate "he ";
+  Abbreviate "that.";
+  Abbreviate "hat ";
+  Abbreviate "to ";
+  Abbreviate "an ";
+  Abbreviate "'re ";
+  Abbreviate "don";
+  Abbreviate "his ";
+  Abbreviate "I'm ";
+  Abbreviate "and ";
+  Abbreviate "our ";
+  Abbreviate "ear";
+  Abbreviate " on";
+  Abbreviate " dog pays no attention";
+  Abbreviate "e a";
+  Abbreviate " so";
+  Abbreviate " that";
+  Abbreviate " st";
+  Abbreviate "ing";
+  Abbreviate "her";
+  Abbreviate " back";
+  Abbreviate " can";
+  Abbreviate " wo";
+  Abbreviate " never";
+  Abbreviate "s a";
+  Abbreviate " to";
+  Abbreviate " ha";
+  Abbreviate " you";
+  Abbreviate " know";
+  Abbreviate " co";
+  Abbreviate " better";
+  Abbreviate " out";
+  Abbreviate " wa";
+  Abbreviate " fr";
+  Abbreviate " fo";
+  Abbreviate " of";
+  Abbreviate "bartender";
+  Abbreviate " go";
+  Abbreviate " lik";
+  Abbreviate " them";
+  Abbreviate " lo";
+  Abbreviate " ma";
+  Abbreviate " ho";
+  Abbreviate " over";
+  Abbreviate " ta";
+  Abbreviate " him";
+  Abbreviate "int";
+  Abbreviate "What";
+  Abbreviate "I wouldn't mess with that";
+
+!  Abbreviate ". ";
+!  Abbreviate ", ";
+!  Abbreviate " the ";
+!  Abbreviate "You";
+!  Abbreviate "The";
+!  Abbreviate "It doesn't belong there.";
+!  Abbreviate "'t do that";
+!  Abbreviate "ing";
+!  Abbreviate "you";
+!  Abbreviate "'t need to";
+!  Abbreviate "I don";
+!  Abbreviate "It's";
+!  Abbreviate "** Spoilers to follow **";
+!  Abbreviate "A faint whisper can be heard";
+!  Abbreviate " that";
+!  Abbreviate "her";
+!  Abbreviate " back";
+!  Abbreviate "s a";
+!  Abbreviate "e a";
+!  Abbreviate " to";
+!  Abbreviate " don't";
+!  Abbreviate " wa";
+!  Abbreviate " ha";
+!  Abbreviate " co";
+!  Abbreviate " st";
+!  Abbreviate " doesn't";
+!  Abbreviate " never";
+!  Abbreviate " lo";
+!  Abbreviate " fro";
+!  Abbreviate " pa";
+!  Abbreviate " li";
+!  Abbreviate " so";
+!  Abbreviate "e o";
+!  Abbreviate " ma";
+!  Abbreviate "ear";
+!  Abbreviate " wi";
+!  Abbreviate "That";
+!  Abbreviate " them";
+!  Abbreviate " bartender";
+!  Abbreviate " mo";
+!  Abbreviate " bu";
+!  Abbreviate " wo";
+!  Abbreviate " in";
+!  Abbreviate " think";
+!  Abbreviate " si";
+!  Abbreviate " cl";
+!  Abbreviate " hi";
+!  Abbreviate "he say";
+!  Abbreviate " it";
+!  Abbreviate " can";
+!  Abbreviate " crystal";
+!  Abbreviate " get";
+!  Abbreviate "I'm not";
+!  Abbreviate "'s no";
+!  Abbreviate " tr";
+!  Abbreviate " do";
+!  Abbreviate " th";
+!  Abbreviate " about";
+!  Abbreviate "artender";
+!  Abbreviate " around";
+!  Abbreviate " all";
+!  Abbreviate " he";
+
+! ---------------------------------------------------------------------------- !
+!       CLASSES
+!
+
+! 01/28/14
+
+  Class  Room
+   with  before [;
+         ],
+    has         light;
+
+! 01/28/14
+
+  Class  RoomObj
+   with  describe [;
+             rtrue;
+         ],
+         before [;
+             Enter, Go:
+                 "You're already here.";
+             Exit:
+                 <<Exit location>>;
+             Search:
+                 return L__M(##Search, 4);
+             Take, Remove, Turn, PushDir, Push, Pull:
+                 "You can't do that to the room.";
+         ],
+   has   concealed static;
+
+! 01/31/14
+
+  Class  OutRch
+   with  before [;
+             "You can't do that from here.";
+         ],
+   has   concealed static;
+
+! 06/01/20
+
+  Class  OutRchDog
+   with  before [;
+             Attack, Blow, Burn, Climb, Close, Cut, Dig, Drink, Empty, Exit, GetOff, JumpOver, Kick, Listen, LookUnder, Open:
+                 "You can't do that on this side of the gate.";
+             Push, PushDir, Pull, Read, Remove, Rub, Search, Set, SetTo, SmellNoun, Squeeze, Swing, SwitchOn, SwitchOff, Take, Tie, Touch, Transfer, Turn, Unlock, Wave:
+                 "You can't do that on this side of the gate.";
+         ],
+   has   concealed static;
+
+! 04/13/20
+
+  Class  TooFar
+   with  before [;
+             Attack, Blow, Burn, Climb, Close, Cut, Dig, Drink, Eat, Empty, Exit, GetOff, JumpOver, Kick, Listen, LookUnder, Open:
+                 "That's too far from here.";
+             Push, PushDir, Pull, Read, Remove, Rub, Search, Set, SetTo, SmellNoun, Squeeze, Swing, SwitchOn, SwitchOff, Take, Talk, Taste, Tie, Touch, Transfer, Turn, Unlock, Wave:
+                 "That's too far from here.";
+         ],
+   has   concealed static;
+
+! 12/13/16
+
+  Class  ORchSc
+   with  before [;
+             Attack, Blow, Burn, Climb, Close, Cut, Dig, Drink, Eat, Empty, Exit, GetOff, JumpOver, Kick, Listen, LookUnder, Open:
+                 if (iScientist == 3) "You can't do that from here.";
+                 "You can't see him anymore.";
+             Push, PushDir, Pull, Read, Remove, Rub, Search, Set, SetTo, Smell, Squeeze, Swing, SwitchOn, SwitchOff, Take, Talk, Taste, Tie, Touch, Transfer, Turn, Unlock, Wave:
+                 if (iScientist == 3) "You can't do that from here.";
+                 "You can't see him anymore.";
+         ],
+   has   concealed static;
+
+! 08/24/20
+
+  Class  ORchMel
+   with  before [;
+             Attack, Blow, Burn, Climb, Close, Cut, Dig, Drink, Eat, Empty, Exit, GetOff, JumpOver, Kick, Listen, LookUnder, Open:
+                 "You can't see him anymore.";
+             Push, PushDir, Pull, Read, Remove, Rub, Search, Set, SetTo, Smell, Squeeze, Swing, SwitchOn, SwitchOff, Take, Talk, Taste, Tie, Touch, Transfer, Turn, Unlock, Wave:
+                 "You can't see him anymore.";
+         ],
+   has   concealed static;
+
+! 10/07/19
+
+  Class  ORchGoneKids
+   with  before [;
+             Attack, Blow, Burn, Climb, Close, Cut, Dig, Drink, Eat, Empty, Exit, GetOff, JumpOver, Kick, Listen, LookUnder, Open:
+                 "You can't see them anymore.";
+             Push, PushDir, Pull, Read, Remove, Rub, Search, Set, SetTo, Smell, Squeeze, Swing, SwitchOn, SwitchOff, Take, Talk, Taste, Tie, Touch, Transfer, Turn, Unlock, Wave:
+                 "You can't see them anymore.";
+         ],
+   has   concealed static;
+
+! 08/22/14
+
+  Class  Movabl
+   with  after [;
+             Give:
+
+             Insert:
+
+          ];
+
+! 10/09/19
+
+  Class  ORchGr
+   with  before [;
+             Attack, Blow, Burn, Climb, Close, Cut, Dig, Drink, Eat, Empty, Exit, GetOff, JumpOver, Kick, Listen, LookUnder, Open:
+                "You can't do that from here.";
+             Push, PushDir, Pull, Read, Remove, Rub, Search, Set, SetTo, Smell, Squeeze, Swing, SwitchOn, SwitchOff, Take, Talk, Taste, Tie, Touch, Transfer, Turn, Unlock, Wave:
+                "You can't do that from here.";
+         ],
+   has   concealed static;
+
+! 08/12/16
+
+  Class  ORchCig
+   with  before [;
+                 "You can't do that. They're behind Plexiglas.";
+         ];
+
+! 05/30/17
+
+  Class  ORchTV
+   with  before [;
+                 "You can't do that. It's behind Plexiglas.";
+         ];
+
+! ---------------------------------------------------------------------------- !
+!       ROOMS
+!
+
+  Include "R_EastsideCliff";
+  Include "R_GasStation";
+  Include "R_MainStreet";
+  Include "R_MapleRoad";
+  Include "R_DirtRoad";
+  Include "R_ParkingLot";
+  Include "R_BowlingAlley";
+  Include "R_AlleyBar";
+  Include "R_AlleyRental";
+  Include "R_BackLot";
+  Include "R_BackYard";
+  Include "R_Hallway";
+  Include "R_Kitchen";
+  Include "R_LivingRoom";
+  Include "R_Basement";
+  Include "R_OutsidePostOffice";
+  Include "R_OutsideMadameSorras";
+  Include "R_OutsideArtGallery";
+  Include "R_OutsideJoesBar";
+  Include "R_OutsideComplex";
+  Include "R_OutsideStore";
+  Include "R_OutsideLibrary";
+  Include "R_OutsideTownHall";
+  Include "R_BusStop";
+  Include "R_TrailerPark";
+  Include "R_RustyGate";
+  Include "R_Park";
+  Include "R_TheTavern";
+  Include "R_ConvenienceStore";
+  Include "R_JunkYard";
+  Include "R_OpenField";
+  Include "R_MadameSorras";
+  Include "R_ArtGallery";
+  Include "R_BackAlley";
+  Include "R_Shed";
+  Include "R_TattooShop";
+
+! ---------------------------------------------------------------------------- !
+!       PLAYER OBJECT
+!
+
+  Include "P_Player";
+
+! ---------------------------------------------------------------------------- !
+!       OBJECTS MOVED IN REAL-TIME
+!
+
+  Include "O_Watch";
+  Include "O_Clothes";
+  Include "O_SparkPlugCar";
+  Include "O_SparkPlugMower";
+  Include "O_FusedPlug";
+  Include "O_VacuumTubeAmp";
+  Include "O_VacuumTubeTV";
+  Include "O_BrokenTube";
+  Include "O_BeefJerky";
+  Include "O_Babushka";
+  Include "O_CrystalBall";
+  Include "O_CrystalCat";
+  Include "O_CrystalShard";
+  Include "O_DullCrystal";
+  Include "O_Incense";
+  Include "O_ShedKey";
+  Include "O_SocketWrench";
+  Include "O_Flask";
+  Include "O_Notes";
+  Include "O_DollarBill";
+  Include "O_ConanComic";
+  Include "O_ChocolateBar";
+  Include "O_Plate";
+
+! ---------------------------------------------------------------------------- !
+!       STATIC OBJECTS MOVED IN REAL-TIME : Not Real
+!
+
+  Include "O_BrokenTubeYard";
+
+! ---------------------------------------------------------------------------- !
+!       NPC OBJECTS
+!
+
+  Include "NPC_Jerry";
+  Include "NPC_Eddie";
+  Include "NPC_MadameSorra";
+  Include "NPC_Amy";
+  Include "NPC_Kid";
+
+! ---------------------------------------------------------------------------- !
+!       HINTS
+!
+        Menu temporal_hints "Entangled"
+        with banner_tags "N = next subject" "P = previous" "RETURN = read subject" "Q = quit hints" "Q = quit hints" 12 14,
+             description
+                 "Please select one of the following items:",
+                 number 1;
+
+        Menu about_section "About Entangled" temporal_hints
+        with banner_tags "N = next subject" "P = previous" "RETURN = read subject" " Q = back" "Q = back" 12 8;
+
+        HintTopic about_the_game "About the game" about_section;
+
+        Hint "About the Game" about_the_game
+        with description [;
+            print "^        Welcome to Entangled, an exploratory game that wanders through the past,
+            crafted out of my love for the text adventure.
+            The story was started at the beginning of August 2016 and is my second
+            interactive fiction game. When I first came across IF by playing Infocom's
+            Sorcerer, I was blown away. IF was new, and seeing the time travel puzzle inspired me.
+            I could never hope to match such a design, but I've always loved time travel in games
+            and its cause and effect.^^";
+            print "        So here's my attempt at watching that effect ripple over 40 years.^^";
+            ! PageBreak();
+            print "        The game should take less than two hours to play, even with reading everything
+            that's modeled here in this small town. You can't die in this game. Though you can drift off the
+            golden path and not get the ending you want. There are eight endings to the game.^^";
+            print "        Keep in mind. The game can't be put into an unwinnable state, and even though
+            you can lock yourself out of some puzzles, there's always a way around. Still, you might want
+            to save often. Also, try to get to know the people, so you have a better idea of what happens
+            at the end.^^";
+            ! PageBreak();
+            print "        You can TALK to people, giving you a few subjects you can ASK them about,
+            TELL them things, and SAY YES or NO to simple questions. Also try VERBS to get a list of common commands used in this game.^^";
+            print "        Entangled contains a total of ", GTOTALROOMS, " rooms with ", GTOTALOBJS,
+            " objects, 1,", GTWORDS, " words, and an OpCode length of ", GPLOPCODE, ",", GOPCPH, GOPCSPH, GOPCODE, ".^^";
+            print "        If you have any questions, please contact the author via email:
+            darkstar@@64infodarkness.com^^";
+            ! PageBreak();
+            GameCredits();
+        ];
+
+        HintTopic credits "Credits" about_section;
+
+        Hint "Credits" credits
+        with description [;
+            GameCredits();
+        ];
+
+        HintTopic common_verbs "Common Verbs" temporal_hints;
+
+        Hint "Common Verbs" common_verbs
+        with description [;
+            CommonVerbsPrint();
+        ];
+
+        Menu hints "Hints" temporal_hints
+        with banner_tags "N = next subject" "P = previous" "RETURN = read subject" " Q = back" "Q = back" 12 8;
+
+        HintTopic find_tom "How do you get past Tom?" hints;
+
+        Hint  "Have you explored the town?" find_tom;
+        Hint  "Who have you talked to?" find_tom;
+        Hint  "** Spoilers to follow **" find_tom;
+        Hint  "Have you been inside the tattoo shop?" find_tom;
+        Hint  "Have you talked to Nick?" find_tom;
+        Hint  "** Spoilers to follow **" find_tom;
+        Hint  "Ask Nick about Tom" find_tom;
+        Hint  "Go back to Tom" find_tom;
+        Hint  "** Spoilers to follow **" find_tom;
+        Hint  "Tell Tom about meteors" find_tom;
+
+        HintTopic find_sam "How do you find Sam?" hints;
+
+        Hint  "Where have you looked?" find_sam;
+        Hint  "Where is he suppose to be?" find_sam;
+        Hint  "** Spoilers to follow **" find_sam;
+        Hint  "Enter the bowling alley" find_sam;
+
+        HintTopic find_machine "How do you find out what's going on?" hints;
+
+        Hint  "Have you explored the bowling alley?" find_machine;
+        Hint  "Who have you talked to?" find_machine;
+        Hint  "** Spoilers to follow **" find_machine;
+        Hint  "Have you been everywhere in the bowling alley?" find_machine;
+        Hint  "Did you go out the backdoor?" find_machine;
+        Hint  "What did you try to do in the Backlot?" find_machine;
+        Hint  "Did you notice anything unusual?" find_machine;
+        Hint  "** Spoilers to follow **" find_machine;
+        Hint  "What about the house on the property line?" find_machine;
+        Hint  "Did you enter the house?" find_machine;
+        Hint  "Did you explore the basement?" find_machine;
+        Hint  "** Spoilers to follow **" find_machine;
+        Hint  "Look at the machine in the basement." find_machine;
+
+        HintTopic plug_item "Finding the spark plug." hints;
+        Hint  "Have you explored the town?" plug_item;
+        Hint  "Who have you talked to?" plug_item;
+        Hint  "** Spoilers to follow **" plug_item;
+        Hint  "Have you been to the Gas Station?" plug_item;
+        Hint  "Did you talk to the attendant?" plug_item;
+        Hint  "Did you ask him about the spark plug?" plug_item;
+        Hint  "** Spoilers to follow **" plug_item;
+        Hint  "Did you go to the trailer park?" plug_item;
+        Hint  "All the way in the back?" plug_item;
+        Hint  "South of the eastside cliff?" plug_item;
+        Hint  "** Spoilers to follow **" plug_item;
+        Hint  "Did you examine the shed?" plug_item;
+        Hint  "What's around the shed?" plug_item;
+        Hint  "** Spoilers to follow **" plug_item;
+        Hint  "Did you try pushing a rock?" plug_item;
+        Hint  "Once you have the key, unlock the shed." plug_item;
+        Hint  "Inside, take the spark plug." plug_item;
+
+        HintTopic tube_item "Finding the vacuum tube." hints;
+
+        Hint  "Have you explored the town?" tube_item;
+        Hint  "Have you been to The Tavern?" tube_item;
+        Hint  "** Spoilers to follow **" tube_item;
+        Hint  "There's an amp on the stage in The Tavern." tube_item;
+        Hint  "Have you looked at it?" tube_item;
+        Hint  "Have you been up on the riser?" tube_item;
+        Hint  "The bartender will try to block you." tube_item;
+        Hint  "Are you having problems getting past him?" tube_item;
+        Hint  "** Spoilers to follow **" tube_item;
+        Hint  "Is he alone? Is there a patron there?" tube_item;
+        Hint  "If Harry is there, you need to get rid of him first." tube_item;
+        Hint  "There's a section on getting rid of Harry in this guide." tube_item;
+        Hint  "** Spoilers to follow **" tube_item;
+        Hint  "After Harry leaves, you need to get rid of Nick." tube_item;
+        Hint  "Try talking to him for a bit." tube_item;
+        Hint  "Ask him about music, bands, or the amp." tube_item;
+        Hint  "** Spoilers to follow **" tube_item;
+        Hint  "After a while, he will leave." tube_item;
+        Hint  "But he also comes back." tube_item;
+        Hint  "When he's gone you can work on the amp." tube_item;
+        Hint  "** Spoilers to follow **" tube_item;
+        Hint  "Walk up on the riser." tube_item;
+        Hint  "You need to turn the amp." tube_item;
+        Hint  "With the back exposed, take a tube." tube_item;
+
+        HintTopic harry_problem "Getting rid of Harry." hints;
+
+        Hint  "Harry is the patron that's sitting at the bar in The Tavern." harry_problem;
+        Hint  "** Spoilers to follow **" harry_problem;
+        Hint  "You have to get rid of him before you can deal with Nick." harry_problem;
+        Hint  "It's easy to make him leave." harry_problem;
+        Hint  "** Spoilers to follow **" harry_problem;
+        Hint  "There's two ways to upset him." harry_problem;
+        Hint  "You can bother him by asking his name." harry_problem;
+        Hint  "Or about work or schooling." harry_problem;
+        Hint  "Enough times until he leaves." harry_problem;
+        Hint  "Or more directly. Push him." harry_problem;
+
+        HintTopic crystal_item "Finding a crystal shard." hints;
+
+        Hint  "Have you explored the town?" crystal_item;
+        Hint  "Have you found Madame Sorra's?" crystal_item;
+        Hint  "** Spoilers to follow **" crystal_item;
+        Hint  "Inside she has a crystal ball." crystal_item;
+        Hint  "Have you talked to her?" crystal_item;
+        Hint  "** Spoilers to follow **" crystal_item;
+        Hint  "Did you ask her about the ball?" crystal_item;
+        Hint  "Did you ask her about her mother?" crystal_item;
+        Hint  "Did you ask her about the scarf?" crystal_item;
+        Hint  "** Spoilers to follow **" crystal_item;
+        Hint  "You'll need to find the scarf in town." crystal_item;
+        Hint  "Where have you looked?" crystal_item;
+        Hint  "Have you been to the Park?" crystal_item;
+        Hint  "There's a bum there." crystal_item;
+        Hint  "** Spoilers to follow **" crystal_item;
+        Hint  "You'll have to get rid of him." crystal_item;
+        Hint  "Once the bum is gone, take the scarf from the bench." crystal_item;
+        Hint  "** Spoilers to follow **" crystal_item;
+        Hint  "Give the scarf to Madame Sorra." crystal_item;
+        Hint  "Take the crystal ball after she leaves." crystal_item;
+        Hint  "Still don't have the shard?" crystal_item;
+        Hint  "What could you do to the crystal to get a shard?" crystal_item;
+        Hint  "** Spoilers to follow **" crystal_item;
+        Hint  "Drop the crystal ball to get the shard." crystal_item;
+
+        HintTopic bum_problem "Getting rid of the bum." hints;
+
+        Hint  "The bum is sitting in the park." bum_problem;
+        Hint  "** Spoilers to follow **" bum_problem;
+        Hint  "You need to get rid of him for Madame Sorra." bum_problem;
+        Hint  "There is more than one way to get rid of him." bum_problem;
+        Hint  "Any ideas on how to make the bum leave?" bum_problem;
+        Hint  "What have you found around town?" bum_problem;
+        Hint  "** Spoilers to follow **" bum_problem;
+        Hint  "Did you search the dumpster behind the bowling alley?" bum_problem;
+        Hint  "After you have the flask, what could you do with it?" bum_problem;
+        Hint  "** Spoilers to follow **" bum_problem;
+        Hint  "Give the flask to the bum." bum_problem;
+
+        HintTopic machine_problem "Fixing the machine." hints;
+
+        Hint  "There are three items you need to fix the machine." machine_problem;
+        Hint  "Examine it." machine_problem;
+        Hint  "You'll see there's a problem with the generator." machine_problem;
+        Hint  "Also, the vacuum tube is blown out and the crystal is dull." machine_problem;
+        Hint  "** Spoilers to follow **" machine_problem;
+        Hint  "There's a wrench on the bench in the basement." machine_problem;
+        Hint  "You'll need it in your inventory to can change the plug." machine_problem;
+        Hint  "Put the plug in the generator." machine_problem;
+        Hint  "Then put the tube in the machine." machine_problem;
+        Hint  "And finally, put the shard in the arm." machine_problem;
+        Hint  "Getting the whole thing going now should be pretty easy." machine_problem;
+        Hint  "** Spoilers to follow **" machine_problem;
+        Hint  "Turn on the generator." machine_problem;
+        Hint  "Examine the machine." machine_problem;
+        Hint  "Press button." machine_problem;
+
+        Object        label;
+        Object        toggle;
+        Object        menu_style;
+        Object        sup_bar;
+
+! ---------------------------------------------------------------------------- !
+!       UTILITY ROUTINES
+!
+!        "^^Driven out of your own home and a mobile one at that. Sam's woman
+!        needs to get control of herself, but you're not going to be the one to do it.
+!        Sam should be down at the bowling alley. If you can get him away from the bar.^";
+
+  [ Initialise;
+        lookmode = 2;
+        player = SelfPlayer;
+        notify_mode = false;
+
+        style roman; font on;
+
+        location = cliff;
+
+        hint_menu = temporal_hints;
+
+        move clothes to player;
+        move watch to player;
+        move sparkPlugCar to gasStationCar;
+        move sparkPlugMower to shedShelf;
+        move shedParts to shedShelf;
+        move fusedPlug to basementGenerator;
+        move brokenTube to basementTimeMachine;
+        move dullCrystal to basementMetalArm;
+        move incense to artGalleryCounter;
+        move crystalBall to madameSorras;
+        move socketWrench to basementWorkbench;
+        move backAlleyBike to backAlleyDumpster;
+        move plate to backAlleyDumpster;
+
+! ^^Beta 1.10
+
+        "^^You came home from work only to be driven out. Sam's wife lost it,
+        going on about how the landlord is going to evict you.
+        She needs to calm down, but you're no help. Sam should be down
+        at the bowling alley that's on the other side of town. If you're
+        lucky, you might be able to get him away from the bar.^";
+  ];
+
+  ! deadflag = 3;
+  [ DeathMessage;
+        switch (deadflag) {
+            3: print " Game Over ";
+        }
+  ];
+
+  [ PrintRank;
+        print ", and have been to ", iRoom, " out of ", GTOTALROOMS, " rooms, earning you the title of ";
+        if (score >= 50) "Daring Time Traveler.";
+        if (score >= 45) "Overworked Investigator.";
+        if (score >= 30) "Temporal Explorer.";
+        if (score >= 10) "Inquisitive Adventurer.";
+        "Lonely Traveler.";
+  ];
+
+! ---------------------------------------------------------------------------- !
+!       SELF DEFINED ROUTINES
+!
+
+  [ currentTime;
+        if (iTime==PRESENT) rtrue;
+        rfalse;
+  ];
+
+  [ switchTimePast;
+        iTime=PAST;
+
+        ! Reset Variables
+        iAskWait = 0;
+        iAskRestless = 0;
+        iAmyConversation = 0;
+        gasStationBooth.attendantCall = false;
+        gasStationBooth.boothAttacked = false;
+        crystalBall.takeCrystalBall = false;
+        madameSorras.askedForReading = false;
+        outsideTownHall.firstLook = true;
+        outsidePostOffice.firstLook = true;
+        theTavern.closedUp = false;
+        smallPark.firstTimeDaemon = true;
+        outsideComplexDoor.cigOut = false;
+        outsideComplexDoorman.spokeFirstTime = false;
+
+        ! Remove Objects
+        remove gasStationMark;
+        remove gasStationPhone;
+        remove gravelRoadPhone;
+        remove mapleRoadDiner;
+        remove outsidePostOfficeDiner;
+        remove outsideArtGalleryTattooShop;
+        remove outsideArtGalleryTattDoor;
+        remove oldMadameSorra;
+        remove outsideJoesBarTattooShop;
+        remove backAlleyBike;
+        remove backAlleyTattooShop;
+        remove backAlleySprayPaint;
+        remove plate;
+        remove convenienceStoreOldAmy;
+        remove convenienceStoreNoteBook;
+        remove outsideComplexCigarettes;
+        remove outsideMadameSorrasTattooShop;
+        remove smallParkGraffiti;
+        remove smallParkTags;
+        remove outsideTownHallGraffiti;
+        remove outsideLibraryGraffiti;
+        remove outsidePostOfficeGraffiti;
+        remove outsideMadameSorrasGraffiti;
+        remove mapleRoadGraffiti;
+        remove outsideStoreGraffiti;
+        remove busStopGraffiti;
+        if (mapleRoadGlasses in mapleRoad) remove mapleRoadGlasses;
+        if (bowlingAlleyGoneKids in bowlingAlley) remove bowlingAlleyGoneKids;
+
+        StopDaemon(oldMadameSorra);
+        StopDaemon(convenienceStoreOldAmy);
+        StopDaemon(tattooShopNick);
+        if (notes in gasStation) remove notes;
+        if (notes in gravelRoad) remove notes;
+        if (gasStationScientist in gasStation) remove gasStationScientist;
+        if (gasStationScientist in gravelRoad) remove gasStationScientist;
+
+        ! Start Daemons
+        StartDaemon(gasStationRoad);
+
+        ! Move Objects
+        move dollarBill to outsideJoesBar;
+        move smallParkEddie to smallPark;
+        move gasStationJerry to gasStation;
+        move gasStationTV to gasStation;
+        move gasStationCar to gasStation;
+        move gasStationBottle to gasStation;
+        move gravelRoadTV to gravelRoad;
+        move gravelRoadComic to gravelRoad;
+        move outsideArtGalleryDoor to outsideArtGallery;
+        move outsideArtGalleryGallery to outsideArtGallery;
+        move outsideArtGallerySymbol to outsideArtGallery;
+        move madameSorrasMadameSorra to madameSorras;
+        move outsideJoesBarArtGallery to outsideJoesBar;
+        move outsideJoesBarPerson to outsideJoesBar;
+        move outsideJoesBarBartender to outsideJoesBar;
+        move backAlleyDoor to backAlley;
+        move backAlleyGallery to backAlley;
+        move backAlleyButts to backAlley;
+        move convenienceStoreJerky to convenienceStore;
+        move convenienceStorePharmacy to convenienceStore;
+        move convenienceStoreClerksComic to convenienceStore;
+        move convenienceStoreComicBookRack to convenienceStore;
+        move convenienceStoreXMenComic to convenienceStore;
+        move convenienceStoreWonderWomanComic to convenienceStore;
+        move convenienceStoreConanComic to convenienceStore;
+        move convenienceStoreAmy to convenienceStore;
+        move convenienceStoreKid to convenienceStore;
+        move outsideMadameSorrasArtGallery to outsideMadameSorras;
+        move mapleRoadEmptyLot to mapleRoad;
+
+        gravelRoadAttendant.&name-->0 = 'overweight';
+        gravelRoadAttendant.&name-->1 = 'jerry';
+
+        gasStationPumps.&name-->3 = 'leaded';
+
+        outsideLibraryBench.&name-->2 = 'ph40400';
+
+        cliffHome.&name-->1 = 'ph00420';
+        cliffHome.&name-->2 = 'ph00421';
+        cliffHome.&name-->3 = 'ph00422';
+
+        cliffSun.&name-->3 = 'ph00423';
+
+        gasStationSign.&name-->0 = 'backlit';
+        gasStationSign.&name-->5 = 'ph002600';
+
+        gravelRoadGasStation.&name-->3 = 'ph000101';
+        gravelRoadGasStation.&name-->4 = 'ph000102';
+        gravelRoadGasStation.&name-->5 = 'ph000103';
+        gravelRoadGasStation.&name-->6 = 'ph000104';
+
+        parkingLotNeonSign.&name-->5 = 'ph000620';
+
+        outsideMadameSorrasBuilding.&name-->9 = 'shop';
+
+        if (gravelRoadCruiser in gravelRoad) remove gravelRoadCruiser;
+
+        madameSorras.turnOnDaemon = true;
+
+        ! Remove The Kid If It's After 10PM
+        if (iHour >= 10 && iAMPM == 1) {
+            give convenienceStoreAmy ~scenery;
+            remove convenienceStoreKid;
+        }
+        if (iAMPM == 0) {
+            give convenienceStoreAmy ~scenery;
+            remove convenienceStoreKid;
+        }
+  ];
+
+  [ DrawStatusLine width posa posb;
+        @split_window 2; @set_window 1; style reverse; font off;
+        width = 0->33; posa = width-26; posb = width-14;
+        @set_cursor 1 1; spaces (0->33);
+        @set_cursor 2 1; spaces (0->33);
+        @set_cursor 1 2;
+        switch(location) {
+            smallPark:
+                if (smallParkBench.playerSit) print "Park (on the bench)";
+                else print "Park";
+            outsideLibrary:
+                if (outsideLibraryBench.playerSit) print "Corner of Main & Midland (on the bench)";
+                else print "Corner of Main & Midland";
+            theTavern:
+                if (SelfPlayer.onRiser) print "The Tavern (on the riser)";
+                else {
+                    if (theTavernStool.sitOn) print "The Tavern (on the stool)";
+                    else print "The Tavern";
+                }
+            alleyBar:
+                if (alleyBarStool.sitOn) print "Bar (on the stool)";
+                else print "Bar";
+            default:
+                PrintShortName(location);
+        }
+        if (width > 40) {
+            if (iAMPM == 0) {
+                if (iMinute > 9) {
+                    @set_cursor 1 posb; print "Time: ", iHour, ":", iMinute, " am";
+                } else {
+                    @set_cursor 1 posb; print "Time: ", iHour, ":0", iMinute, " am";
+                }
+            } else {
+                if (iMinute > 9) {
+                    @set_cursor 1 posb; print "Time: ", iHour, ":", iMinute, " pm";
+                } else {
+                    @set_cursor 1 posb; print "Time: ", iHour, ":0", iMinute, " pm";
+                }
+            }
+        }
+        @set_cursor 2 1;
+        switch(location) {
+            cliff, gasStation, parkingLot, kitchenHouse:
+                print " Exits: North, South";
+            mapleRoad:
+                if (basement.firstTime) {
+                    print " Exits: East, West";
+                } else {
+                    print " Exits: North, East, West, Northeast";
+                }
+            dirtRoad:
+                print " Exits: North, East";
+            bowlingAlley:
+                if (basement.firstTime) print " Exits: North, East, West";
+                else print " Exits: North, South, East, West";
+            backLot:
+                if (basement.firstTime) {
+                    print " Exits: South, Northwest";
+                } else {
+                    print " Exits: South, East, Northwest";
+                }
+            backYard:
+                print " Exits: North, Southeast";
+            hallwayHouse:
+                print " Exits: North, South, Down";
+            basement:
+                print " Exits: Up";
+            alleyRental, outsideComplex:
+                print " Exits: North, West";
+            gravelRoad, openField:
+                print " Exits: South, West";
+            artGallery, smallPark, theTavern, tattooShop:
+                print " Exits: North";
+            livingRoom, junkYard:
+                print " Exits: South";
+            alleyBar, madameSorras, shed:
+                print " Exits: East";
+            convenienceStore:
+                print " Exits: West";
+            busStop:
+                print " Exits: East, West";
+            backAlley:
+                print " Exits: Northeast";
+            outsideArtGallery:
+                print " Exits: North, South, East, Southwest";
+            outsidePostOffice, outsideTownHall, outsideLibrary:
+                print " Exits: South, East, West";
+            outsideJoesBar:
+                if (basement.firstTime) {
+                    print " Exits: East, West";
+                } else {
+                    if (theTavern.closedUp == false) print " Exits: South, East, West";
+                    else print " Exits: East, West";
+                }
+            outsideMadameSorras:
+                print " Exits: North, South, West";
+            outsideStore:
+                print " Exits: North, South, East";
+            rustyGate:
+                if (rustyGateDog.eatingJerky) {
+                    print " Exits: North, Southwest";
+                } else {
+                    print " Exits: Southwest";
+                }
+            trailerPark:
+                if (trailerParkShed.hasUnlocked) {
+                    print " Exits: North, West";
+                } else {
+                    print " Exits: North";
+                                        }
+                }
+                @set_cursor 1 1; style roman; @set_window 0; font on;
+  ];
+
+  [ FullScoreSub;
+        ScoreSub();
+        if (score == 0) rtrue;
+        print "^Consisting of:^";
+        if (SelfPlayer.scoredTom) print "5 points for getting rid of Tom^";
+        if (gasStationCar.removeSparkPlug) print "5 points for getting the spark plug^";
+        if (shed.removeSparkPlug) print "5 points for getting the spark plug^";
+        if (theTavernMarshall.removedVacuumTube) print "5 points for getting the vacuum tube^";
+        if (junkYardTV.removedVacuumTube) print "5 points for getting the vacuum tube^";
+        if (SelfPlayer.droppedCrystalBall) {
+            if (SelfPlayer.droppedCrystalCat) {
+                print "5 points for getting the crystal shard^";
+            } else {
+                print "5 points for getting the crystal shard^";
+            }
+        }
+        if (backAlleyShards.shardTaken) print "5 points for getting the crystal shard^";
+        if (basementButton.pushed) print "5 points for getting the time machine running^";
+        if (notes.notesScored) print "5 points for reading the notes^";
+        if (notes.giveNotesScored) print "5 points for giving the notes to the kid.^";
+        if (chocolateBar.chocolateScored) print "5 points for giving the bum chocolate^";
+        if (conanComic.giveToJerry) print "5 points for giving Jerry the Conan comic^";
+        if (artGallerySarah.tradedCat) print "5 points for getting the crystal cat from Sarah^";
+  ];
+
+  [ KidHit;
+        remove bowlingAlleyKids;
+        move bowlingAlleyGoneKids to bowlingAlley;
+        SelfPlayer.kidsRunAway = true;
+        "The little one speaks up to answer you, but the bigger kid pushes him
+        into the wall and slaps him upside the head.^
+        ^Before you can say anything, the bully takes off out the front door and the little one follows behind.";
+  ];
+
+  [ TestNight;
+        if (livingRoomWindow.settingSun) rtrue;
+        if (SelfPlayer.eveningTime) rtrue;
+        if (SelfPlayer.nightTime) rtrue;
+        rfalse;
+  ];
+
+!  #ifdef TARGET_GLULX;
+!  [ PageBreak i;
+!        i = KeyCharPrimitive();
+!        if (i=='y') rtrue;
+!        rfalse;
+!  ];
+!  #ifnot;
+!  [ PageBreak i;
+!        @read_char 1 i;
+!        if (i == 'y') rtrue;
+!        rfalse;
+!  ];
+!  #endif;
+
+  ! Place Objects In Global Scope
+  [ InScope;
+        PlaceInScope(playerHands);
+        rfalse;
+  ];
+
+  [ TopicScope w1 w2;
+        if (wn == 2) {
+            wn--; w1 = NextWord();
+        } else {
+            wn--; wn--; w1 = NextWord(); w2 = NextWord();
+            if (w2 == 'him' or 'her') {
+                rfalse;
+            }
+        }
+        switch(scope_stage) {
+            1: rfalse;
+            2: ScopeWithin(Topics); rtrue;
+            3: if (player in bowlingAlley) {
+                   if (bowlingAlleyKids in bowlingAlley) {
+                       if (w1 == 'boy' or 'boys' or 'kids' or 'kid' or 'child' or 'children' or 'little' or 'big' or 'bigger' or 'them') return (KidHit());
+                       if (w2 == 'boy' or 'boys' or 'kids' or 'kid' or 'child' or 'children' or 'little' or 'big' or 'bigger' or 'them') return (KidHit());
+                   }
+                   if (w1 ==  'person' or 'woman' or 'female' or 'girl' or 'punk' or 'nancy' or 'bartender' or 'man' or 'male' or 'guy' or 'phil' or 'her' or 'him') "You can't do that from here.";
+                   if (w2 ==  'person' or 'woman' or 'female' or 'girl' or 'punk' or 'nancy' or 'bartender' or 'man' or 'male' or 'guy' or 'phil' or 'her' or 'him') "You can't do that from here.";
+               }
+               if (player in gasStation) {
+                   if (gasStationScientist in gasStation) "The attendant ignores you watching the scientist cross the lot.";
+                   if (currentTime()) return(MarkResponse());
+                   if (gasStationJerry in gasStation) return(JerryResponse());
+               }
+               if (player in alleyRental) {
+                   if (w1 ==  'customer' or 'customers' or 'people' or 'pitchers' or 'them') "At the moment, even the simplest questions are confusing.";
+                   if (w2 ==  'customer' or 'customers' or 'people' or 'pitchers' or 'them') "At the moment, even the simplest questions are confusing.";
+                   return(NancyResponse());
+               }
+               if (player in alleyBar) {
+                   if (w1 ==  'customer' or 'customers' or 'people' or 'pitchers' or 'them') "At the moment, even the simplest questions are confusing.";
+                   if (w2 ==  'customer' or 'customers' or 'people' or 'pitchers' or 'them') "At the moment, even the simplest questions are confusing.";
+                   return(PhilResponse());
+               }
+               if (player in theTavern) {
+                   if (theTavernHarry in theTavern) {
+                       if (w1 == 'old' or 'man' or 'oldman' or 'oldguy' or 'guy' or 'harry' or 'patron') {
+                           return(HarryResponse());
+                       } else {
+                           return(NickResponse());
+                       }
+                   } else {
+                       if (theTavernNick in theTavern) return(NickResponse());
+                   }
+               }
+               if (player in convenienceStore) {
+                   if (convenienceStoreKid in convenienceStore) return AmyDealingWithKid();
+                   if (convenienceStoreAmy in convenienceStore) return(AmyResponse());
+                   if (convenienceStoreOldAmy in convenienceStore) return(OldAmyResponse());
+               }
+               if (player in madameSorras) {
+                   if (madameSorrasMadameSorra in madameSorras) return(MadameSorraResponse());
+                   if (oldMadameSorra in madameSorras) return(OldSorraResponse());
+               }
+               if (player in smallPark) {
+                   if (smallParkEddie in smallPark) return(EddieResponse());
+               }
+               if (player in gravelRoad) {
+                   if (gasStationScientist in gravelRoad) "You can't see him anymore.";
+               }
+               if (player in mapleRoad) {
+                   if (mapleRoadTom in mapleRoad) return (TomResponse());
+               }
+               if (player in tattooShop) return (OldNickResponse());
+               if (player in artGallery) return (SarahResponse());
+               if (player in outsideComplex) return (DoormanResponse());
+               "At the moment, even the simplest questions are confusing.";
+        }
+  ];
+
+  [ FixSub; return L__M(##Tie); ];
+
+  [ HelloSub; "You can only do that to something animate."; ];
+
+  [ AboutGameSub;
+        give hint_menu nolook;
+        hint_menu.select();
+  ];
+
+  [ CreditsSub;
+        GameCredits();
+  ];
+
+  [ ReversePeople;
+        if (iPeople == 0) return 10;
+        if (iPeople == 1) return 9;
+        if (iPeople == 2) return 8;
+        if (iPeople == 3) return 7;
+        if (iPeople == 4) return 6;
+        if (iPeople == 5) return 5;
+        if (iPeople == 6) return 4;
+        if (iPeople == 7) return 3;
+        if (iPeople == 8) return 2;
+        return 0;
+  ];
+
+
+  ! The scene before you fades and it looks like you are home, but not without some changes.
+  [ EndGame;
+        score = score + 5;
+        basementButton.pushed = true;
+        print "You press the green button on the machine.
+        ^^The room begins to ebb and flow. Time distorts space. The vacuum tubes start to glow red,
+        and the clear crystal shines bright. Waves of space-time ripple out from the machine. The force
+        of it impacting you like a loud sub-woofer.
+        ^^Suddenly the tubes glow white-hot. It's blinding to look at, and the whole room's engulfed in
+        an explosion - an explosion that happens in reverse. Layers of grease peel off the walls, creating
+        a convergence of molecules that form the scientist. He looks up, baffled, as everything starts to crystallize.
+        ^^The waves slow and the machine comes to a halt - time and space settle. The world around you has changed.^";
+        if (iPeople == 9) {
+            print "^You could have found and talked with 1 more person.^";
+            FullInfoDump();
+        } else {
+            if (iPeople == 10) print "^You have found everybody. This is what happened.^";
+            else {
+                print "^You could have found and talked with ", ReversePeople(), " more people.^";
+                FullInfoDump();
+            }
+        }
+        if (theTavernMarshall.removedVacuumTube) {
+            if (gasStationCar.removeSparkPlug) {
+                if (SelfPlayer.droppedCrystalBall) {
+                    return Ending1();
+                } else {
+                    return Ending2();
+                }
+            } else {
+                if (SelfPlayer.droppedCrystalBall) {
+                    return Ending3();
+                } else {
+                    return Ending4();
+                }
+            }
+        } else {
+            if (gasStationCar.removeSparkPlug) {
+                if (SelfPlayer.droppedCrystalBall) {
+                    return Ending5();
+                } else {
+                    return Ending6();
+                }
+            } else {
+                if (SelfPlayer.droppedCrystalBall) {
+                    return Ending7();
+                } else {
+                    return Ending8();
+                }
+            }
+        }
+  ];
+
+  [ FullInfoDump;
+        SelfPlayer.knowNick = true;
+        SelfPlayer.knowJerry = true;
+        SelfPlayer.knowMark = true;
+        SelfPlayer.knowNancy = true;
+        SelfPlayer.knowPhil = true;
+        SelfPlayer.knowSorra = true;
+        SelfPlayer.knowSarah = true;
+        SelfPlayer.knowAmy = true;
+        SelfPlayer.knowEddie = true;
+        SelfPlayer.knowHarry = true;
+  ];
+
+!  [ ResetGame iTest;
+! Reset Score
+!        score = 5;
+!        if (notes.notesScored) score = score + 5;
+
+! Already Know Mark
+!        iPeople = 1;
+
+! See how long it's been since the player started in the basement
+!        if (iAMPM == iSaveAMPM) iTest = iHour - iSaveHour;
+!        else {
+!          iTest = (12 - iSaveHour) + iHour;
+!        }
+
+! Reset Time to when the player first walked into the basement
+!        iHour = iSaveHour;
+!        iMinute = iSaveMinute;
+!        iAMPM = iSaveAMPM;
+
+! Stop Daemons
+!        StopDaemon(theTavernDoor);
+
+! turn off InfoDump
+!        SelfPlayer.knowNick = false;
+!        SelfPlayer.knowJerry = false;
+!        SelfPlayer.knowMark = true;
+!        SelfPlayer.knowNancy = false;
+!        SelfPlayer.knowPhil = false;
+!        SelfPlayer.knowSorra = false;
+!        SelfPlayer.knowSarah = false;
+!        SelfPlayer.knowAmy = false;
+!        SelfPlayer.knowEddie = false;
+!        SelfPlayer.knowHarry = false;
+
+! Player
+!        SelfPlayer.startMoveJerry = true;
+!        SelfPlayer.onRiser = false;
+!        SelfPlayer.outside = false;
+!        SelfPlayer.eveningTime = false;
+!        SelfPlayer.morningTime = false;
+!        SelfPlayer.nightTime = false;
+!        SelfPlayer.dayStart = false;
+!        SelfPlayer.dayTime = false;
+!        SelfPlayer.preEvening = false;
+!        SelfPlayer.preMorning = false;
+!        SelfPlayer.droppedCrystalBall = false;
+!        SelfPlayer.droppedCrystalCat = false;
+!        SelfPlayer.sawJerryLeave = false;
+!        SelfPlayer.gaveEddieDollar = false;
+!        playerHands.handsStink = false;
+
+! Player P.M. Time Settings
+!        if (iAMPM == 1) {
+!            if (iHour == 12) {
+!                SelfPlayer.dayTime = true;
+!            } else {
+!                if (iHour >= 7 && iMinute >= 16) {
+!                    SelfPlayer.nightTime = true;
+!                } else {
+!                    if (iHour == 7 && iMinute >= 0) {
+!                        SelfPlayer.eveningTime = true;
+!                    } else {
+!                        if (iHour >= 6 && iMinute >= 48) {
+!                            SelfPlayer.eveningTime = true;
+!                        } else {
+!                            if (iHour >= 6 && iMinute >= 0) {
+!                                livingRoomWindow.settingSun = true;
+!                                SelfPlayer.dayStart = true;
+!                            } else {
+!                                if (iHour >= 5 && iMinute >= 10) {
+!                                    SelfPlayer.preEvening = true;
+!                                } else {
+!                                    SelfPlayer.dayTime = true;
+!                                }
+!                            }
+!                        }
+!                    }
+!                }
+!            }
+!        }
+
+! Player A.M. Time Settings
+!        if (iAMPM == 0) {
+!            if (iHour == 12) {
+!                SelfPlayer.nightTime = true;
+!            } else {
+!                if (iHour >= 11 && iMinute >= 59) {
+!                    SelfPlayer.dayTime = true;
+!                } else {
+!                    if (iHour >= 7 && iMinute >= 27) {
+!                        SelfPlayer.morningTime = true;
+!                    } else {
+!                        if (iHour >= 7 && iMinute >= 0) {
+!                            SelfPlayer.preMorning = true;
+!                        } else {
+!                            SelfPlayer.nightTime = true;
+!                        }
+!                    }
+!                }
+!            }
+!        }
+
+!        theTavern.closedUp = false;
+!        if (iAMPM == 0) {
+!            if (iHour >= 2 && iHour <= 8) {
+!                theTavern.closedUp = true;
+!            }
+!        }
+
+! Remove Objects
+!        basementButton.&name-->0 = 'red';
+!        basementButton.pushed = false;
+!        remove basementButton;
+!        remove crystalShard;
+!        if (vacuumTubeAmp in basementTimeMachine) remove vacuumTubeAmp;
+!        if (vacuumTubeTV in basementTimeMachine) remove vacuumTubeTV;
+
+!        if (backAlleyShards in backAlleyDumpster) remove backAlleyShards;
+
+!        if (shedKey in player) remove shedKey;
+
+!        if (beefJerky in rustyGate) remove beefJerky;
+!        if (beefJerky in player) remove beefJerky;
+
+!        if (conanComic in clothes) remove conanComic;
+!        if (conanComic in player) remove conanComic;
+
+!        if (chocolateBar in player) remove chocolateBar;
+
+!        if (gasStationComic in gasStation) remove gasStationComic;
+
+!        if (flask in player) remove flask;
+
+!        if (backLotDumpster.takenBeforeBasement) {
+!            playerHands.handsStink = true;
+!            move flask to player;
+!        }
+
+!        if (brokenTubeYard in junkYardTV) remove brokenTubeYard;
+
+! Return Objects
+!        move sparkPlugCar to gasStationCar;
+!        move sparkPlugMower to shedShelf;
+!        move shedParts to shedShelf;
+!        move fusedPlug to basementGenerator;
+!        move brokenTube to basementTimeMachine;
+!        move dullCrystal to basementMetalArm;
+!        move incense to artGalleryCounter;
+!        move crystalBall to madameSorras;
+!        move socketWrench to basementWorkbench;
+!        move dollarBill to outsideJoesBar;
+
+! Reset Objects
+!        iDollarTake = 0;
+!        dollarBill.giveToPhil = false;
+!        dollarBill.smellDollar = false;
+!        dollarBill.dollarScore = false;
+!        dollarBill.showToAmy = false;
+!        dollarBill.gaveAmyDollar = false;
+
+!        crystalBall.showNick = false;
+!        crystalBall.takeCrystalBall = false;
+
+!        crystalShard.showAmy = false;
+
+!        crystalCat.showNick = false;
+
+!        flask.showToJerry = false;
+!        flask.jerryDone = false;
+
+!        notes.giveToPhil = false;
+!        notes.giveToAmy = false;
+
+!        vacuumTubeAmp.giveToJerry = false;
+!        vacuumTubeTV.giveToJerry = false;
+
+!        shedKey.&name-->0 = 'dirt';
+!        shedKey.&name-->1 = 'dirty';
+!        shedKey.showAmy = false;
+!        shedKey.keyCleaned = false;
+
+!        beefJerky.showedNick = false;
+!        beefJerky.giveToSorra = false;
+
+!        chocolateBar.chocolateScored = false;
+!        chocolateBar.giveToSarah = false;
+!        chocolateBar.triedToEat = false;
+
+!        conanComic.wrinkled = false;
+!        conanComic.giveToAmy = false;
+!        conanComic.giveToJerry = false;
+
+! Reset Variables
+!        alleyBarStool.sitOn = false;
+!        alleyBarBottle.triedToTake = false;
+!        alleyBarBeer.tryToBuy = false;
+
+!        alleyRentalRegister.registerFirstTime = false;
+!        alleyRentalShoes.shoesFirstTime = false;
+!        alleyRentalShoes.shoesSecondTime = false;
+
+!        basementTimeMachine.&name-->10 = 'ph00501';
+!        basementTimeMachine.removeBrokenTube = false;
+!        basementTimeMachine.removeBrokenCrystal = false;
+!        basementTimeMachine.insertVacuumTube = false;
+!        basementTimeMachine.insertCrystalShard = false;
+
+!        basementLights.&name-->0 = 'lights';
+!        basementGenerator.generatorOn = false;
+!        basementGenerator.removeFusedPlug = false;
+!        basementGenerator.insertSparkPlug = false;
+!        basementGenerator.genOnFirstTime = false;
+
+!        bowlingAlleyBar.firstTime = false;
+!        bowlingAlleyArcadeMachine.seenFirstTime = false;
+
+!        gasStationCar.firstTimeLook = true;
+!        gasStationCar.removeSparkPlug = false;
+!        gasStationBathroom.knockBathroom = false;
+!        gasStationBooth.boothAttacked = false;
+
+!        junkYardTV.tvTurned = false;
+!        junkYardTV.removedVacuumTube = false;
+
+!        theTavernBooze.tryToBuy = false;
+!        theTavernMarshall.turned = false;
+!        theTavernMarshall.turnedFirstTime = true;
+!        theTavernMarshall.firstTimeTurn = true;
+!        theTavernMarshall.removedVacuumTube = false;
+!        theTavernDrink.triedToTake = false;
+!        theTavernDoor.bartenderReturns = false;
+!        theTavernObj.advanceNick = false;
+
+!        backLotDumpster.bottleTaken = false;
+
+!        madameSorrasSign.signOn = true;
+
+!        backAlleyShards.shardTaken = false;
+!        backAlleyShards.&name-->0 = 'shard';
+
+!        trailerParkRockFormation.foundKey = false;
+!        trailerParkShed.hasUnlocked = false;
+
+!        convenienceStoreJerky.jerkyTaken = false;
+
+!        outsideComplexStore.lookAtFirstTime = false;
+!        outsideLibraryStore.lookAtFirstTime = false;
+
+! Rooms
+!        alleyBar.barFirstTime = true;
+
+!        artGallery.brokeCat = false;
+
+!        backAlley.curatorLeaving = false;
+
+!        bowlingAlley.pastFirstTime = false;
+
+!        gasStation.pastFirstTime = false;
+
+!        gravelRoad.examineStation = true;
+!        gravelRoad.attendantQuestioned = false;
+
+!        madameSorras.enterFirstTime = true;
+!        madameSorras.askedForReading = false;
+
+!        parkingLot.pastFirstTime = false;
+
+!        shed.removeSparkPlug = false;
+
+!        smallPark.seenEddie = false;
+
+!        rustyGate.dogBarking = true;
+
+! Start Daemons
+!        StartDaemon(backAlley);
+!        StartDaemon(artGallerySarah);
+
+! Reset Harry
+!        iOldManAnger = 0;
+!        theTavernNick.harryLeftOnOwn = false;
+!        move theTavernHarry to theTavern;
+!        StartDaemon(theTavern);
+!        move outsideJoesBarPerson to outsideJoesBar;
+!        move theTavernDrink to theTavern;
+!        theTavernBooze.&name-->6 = 'ph00400';
+!        theTavernBooze.&name-->7 = 'ph00401';
+!        theTavernBooze.&name-->8 = 'ph00402';
+!        theTavernHarry.takeSip = false;
+!        theTavernHarry.nameNancy = false;
+!        theTavernHarry.pissedOff = false;
+!        theTavernHarry.samFirstTime = false;
+!        theTavernHarry.judyFirstTime = false;
+!        theTavernHarry.nameFirstTime = false;
+!        theTavernHarry.tellAboutHarry = false;
+!        theTavernHarry.askAboutDrink = false;
+!        theTavernHarry.askAboutWife = false;
+!        theTavernHarry.askAboutBar = false;
+
+! Reset Nick
+!        iNickGone=0;
+!        iNickLeave=0;
+
+!        theTavernObj.advanceNick = false;
+!        move theTavernNick to theTavern;
+!        theTavernNick.askForDrink = false;
+!        theTavernNick.askAboutGuitar = false;
+!        theTavernNick.askAboutStage = false;
+!        theTavernNick.askAboutVagabonds = false;
+!        theTavernNick.dontKillAskForDrink = false;
+!        theTavernNick.askNickForDrink = false;
+!        theTavernNick.askNickForBeer = false;
+!        theTavernNick.askNickForWhiskey = false;
+!        theTavernNick.kitchenClosed = false;
+!        theTavernNick.nameNancy = false;
+!        theTavernNick.answerGood = false;
+!        theTavernNick.samFirstTime = false;
+!        theTavernNick.judyFirstTime = false;
+!        theTavernNick.nameFirstTime = false;
+!        theTavernNick.askMusic = false;
+!        theTavernNick.askMaiden = false;
+!        theTavernNick.tellSorryHarry = false;
+!        theTavernNick.askAboutBand = false;
+
+! Reset Sorra
+!        StartDaemon(madameSorrasMadameSorra);
+!        move madameSorrasAfghan to madameSorras;
+!        move madameSorrasMadameSorra to madameSorras;
+!        madameSorrasMadameSorra.askForBall = false;
+!        madameSorrasMadameSorra.askForReading = false;
+!        madameSorrasMadameSorra.askAboutCrystal = false;
+!        madameSorrasMadameSorra.dontKillAskForReading = false;
+!        madameSorrasMadameSorra.nameFirstTime = false;
+!        madameSorrasMadameSorra.seenHands = false;
+!        madameSorrasMadameSorra.spiritsRestless = false;
+!        madameSorrasMadameSorra.dontKillSpiritsRestless = false;
+!        madameSorrasMadameSorra.askAboutSarah = false;
+!        madameSorrasMadameSorra.askAboutReading = false;
+!        madameSorrasMadameSorra.askAboutCity = false;
+
+! Reset Eddie
+!        move smallParkEddie to smallPark;
+!        smallParkEddie.askHaveAny = false;
+!        smallParkEddie.sayHello = false;
+!        smallParkEddie.dontKillAskHaveAny = false;
+!        smallParkEddie.nameFirstTime = false;
+!        smallParkEddie.amyTold = false;
+!        smallParkEddie.askAboutSelf = false;
+!        smallParkEddie.askAboutSelfTwice = false;
+!        smallParkEddie.askAboutWork = false;
+!        smallParkEddie.askAboutCity = false;
+!        smallParkEddie.askHouse = false;
+!        smallParkEddie.askHouseAgain = false;
+!        smallParkEddie.askAboutPark = false;
+!        smallParkEddie.askAboutStorm = false;
+!        smallParkEddie.gaveBumFlask = false;
+
+! Reset Jerry
+!        move gasStationJerry to gasStation;
+!        if (iSaveMinute > 50) remove gasStationJerry;
+!        gasStationJerry.eyesOpen = false;
+!        gasStationJerry.askedWork = false;
+!        gasStationJerry.askedSorra = false;
+!        gasStationJerry.nameFirtTime = true;
+!        gasStationJerry.angryAttendant = false;
+!        gasStationJerry.askForCar = false;
+!        gasStationJerry.dontKillAskForCar = false;
+!        gasStationJerry.askAboutCats = false;
+!        gasStationJerry.dontKillAskAboutCats = false;
+!        gasStationJerry.askAboutAlley = false;
+!        gasStationJerry.askAboutCar = false;
+!        gasStationJerry.askAboutWork = false;
+!        gasStationJerry.askAboutBoss = false;
+!        gasStationJerry.askAboutComic = true;
+
+! Reset Sarah
+!        artGallerySarah.cityGo = false;
+!        artGallerySarah.dontKillCityGo = false;
+!        artGallerySarah.cityStay = false;
+!        artGallerySarah.dontKillCityStay = false;
+!        artGallerySarah.askStatue = false;
+!        artGallerySarah.answeredNoCity = false;
+!        artGallerySarah.answeredYesCity = false;
+!        artGallerySarah.nameFirstTime = false;
+!        artGallerySarah.askAboutSorra = false;
+!        artGallerySarah.tellAboutSorra = false;
+!        artGallerySarah.seenBallBroken = false;
+!        artGallerySarah.askAboutCrystal = false;
+!        artGallerySarah.seenCatBroken = false;
+!        artGallerySarah.tradedCat = false;
+!        artGallerySarah.askAboutCity = false;
+!        artGallerySarah.playerKnowsSorra = false;
+!        artGallerySarah.askAboutGallery = false;
+!        artGallerySarah.knowAboutCollege = true;
+!        artGallerySarah.seenBallInHands = false;
+!        artGallerySarah.toldAboutBall = false;
+
+! Reset Amy
+!        convenienceStoreAmy.amyReturn = false;
+!        convenienceStoreAmy.seensnacks = false;
+!        convenienceStoreAmy.askedForJerky = false;
+!        convenienceStoreAmy.askForCoke = false;
+!        convenienceStoreAmy.dontKillAskForCoke = false;
+!        convenienceStoreAmy.nameFirstTime = false;
+!        convenienceStoreAmy.nameSecondTime = false;
+!        convenienceStoreAmy.helloFirstTime = false;
+!        convenienceStoreAmy.askAboutSelf = false;
+!        convenienceStoreAmy.askAboutEmpire = false;
+!        convenienceStoreAmy.askAboutESB = false;
+!        convenienceStoreAmy.sayYesAboutEmpire = false;
+!        convenienceStoreAmy.sayNoAboutEmpire = false;
+!        convenienceStoreAmy.lookUp = false;
+!        convenienceStoreAmy.askAboutComic = false;
+!        convenienceStoreAmy.dontKillAskAboutComic = false;
+!        convenienceStoreAmy.askAboutPops = false;
+!        convenienceStoreAmy.askAboutDiana = false;
+!        convenienceStoreAmy.askAboutComicTalk = false;
+
+! Reset Phil
+!        iPhilWashDish = 10;
+!        iAlleyBartender = 0;
+!        alleyBarPhil.askForDrink = false;
+!        alleyBarPhil.dontKillAskForDrink = false;
+!        alleyBarPhil.knowBurgers = false;
+!        alleyBarPhil.answerGood = false;
+!        alleyBarPhil.samFirstTime = false;
+!        alleyBarPhil.judyFirstTime = false;
+!        alleyBarPhil.nameFirstTime = false;
+!        alleyBarPhil.believesConspiracy = false;
+!        alleyBarPhil.askForSecondDrink = false;
+!        alleyBarPhil.askAboutBar = false;
+
+! Reset Nancy
+!        alleyRentalNancy.angry = false;
+!        alleyRentalNancy.nameFirstTime = false;
+!        alleyRentalNancy.hellFirstTime = false;
+!        alleyRentalNancy.askCity = false;
+!        alleyRentalNancy.askAboutCity = false;
+!        alleyRentalNancy.dontKillAskAboutCity = false;
+!        alleyRentalNancy.cityAnswerNo = false;
+!        alleyRentalNancy.cityAnswerYes = false;
+!        alleyRentalNancy.AskAboutCan = false;
+!        alleyRentalNancy.askNYC = false;
+!        alleyRentalNancy.knowAboutHouse = false;
+
+! Reset Doorman
+!        outsideComplexDoorman.spokeFirstTime = false;
+
+! Reset Dog
+!        rustyGateDog.eatingJerky = false;
+
+! Output Text
+!        if (basementTimeMachine.resetTimeMachine) {
+!            print "^The scientist seems to know what's going on as you run around the machine trying to
+!            get to the generator. He slams into you. Both of you crashes into the time machine.";
+!        } else {
+!            basementTimeMachine.resetTimeMachine = true;
+!            print "^Before the scientist can realize what's going on, you run around the machine trying to get
+!            to the generator. But the scientist blindsides you slamming both of you into the device.";
+!        }
+!        print " It falls on top of the generator that's still running. The entire room lights up a bright
+!        white in the resulting explosion.^
+!        ^When the light fades, you're standing alone in the room again. Looking down at your watch, ";
+!        if (iTest > 3) "you can see it's lost time.";
+!        if (iTest > 2) "you can see it's lost a few hours.";
+!        if (iTest > 1) "you can see it's lost a couple of hours.";
+!        "you can see it's lost an hour.";
+!  ];
+
+  [ Ending1;
+        ! Tube - The Tavern / Plug - Station / Crystal - Sorra
+        ! Nick Missing / Jerry Fired / Mark - Postman / Nancy NYC / Madame Sorra = Radio Shack - Telephone Repair Shop /
+        ! Art Gallery Fails To Make Money = Hobbie Shop - Pet Store / Playes Doesn't Exsist / Eddie makes a life for himself /
+
+        ! Nick
+        if (SelfPlayer.knowNick) {
+            print "^Nick, the bartender from The Tavern:
+            ^He would always complain that his sound was taken from him, but never gave up looking for it.
+            He spent the money he had saved and went down to New Orleans. After blowing all his cash,
+            he had to resort to playing acoustic in the street for spare change. Not making it very far,
+            he was heard seen from again.^";
+        }
+
+        ! Jerry
+        if (SelfPlayer.knowJerry) {
+            print "^Jerry, gas station attendant:
+            ^He was fired over the missing spark plug. Though he never knew why. He tried to take Nick's
+            place as a bartender but didn't do very well. After being fired from that job, he took to the
+            street. He moved into the abandoned house and squatted there until the scientist drove him out.^";
+        }
+
+        ! Mark
+        if (SelfPlayer.knowMark) {
+            print "^Mark, gas station attendant:
+            ^Since Jerry was fired, Mark didn't work at the gas station because he never applied through him.
+            He did apply through Alex. Who rode him pretty hard. But the interview motivated him to clean up
+            his act. He ended up working for the post office.^";
+        }
+
+        ! Nancy
+        if (SelfPlayer.knowNancy) {
+            print "^Nancy, the attendant from the bowling alley:
+            ^She made it out of Sunnybrook, relocating to New York City,
+            moving in with her friend from California. But it didn't take
+            long for the two of them to get into it. Lucky for her, she
+            was able to move in with her boyfriend. But she never modeled,
+            and felt something was missing in her life.^";
+        }
+
+        ! Phil
+        if (SelfPlayer.knowPhil) {
+            if (alleyBarPhil.believesConspiracy) {
+                PPE();
+            } else {
+                print "^Phil, the bartender from the bowling alley:
+                ^He retired shortly after to Asia, meeting up with old contacts from Korea.
+                He opened up a smuggling operation, but it was cut short by the Chinese.^";
+            }
+        }
+
+        ! Madame Sorra
+        if (SelfPlayer.knowSorra) {
+            print "^Madame Sorra, the fortune teller:
+            ^She was never heard from again. So the bank seized her property, selling
+            it to Radio Shack which had a good run. But when it was closed in 2000, the store was
+            turned into a telephone repair shop which took off about ten years later.^";
+        }
+
+        ! Sarah
+        if (SelfPlayer.knowSarah) {
+            if (artGallerySarah.tradedCat) {
+                print "^Sarah, curator for the gallery:
+                ^She tried making money off the crystal ball but got ripped off by a fence.
+                She had to sell the gallery in the mid-80s at a loss. It was turned into a pet shop.
+                A shop that Amy started working after graduating from college.^";
+            } else {
+                print "^Sarah, curator for the gallery:
+                ^She was never able to make any money with the art gallery. When she sold it in
+                the mid-80s, it was turned into a pet shop. A shop that Amy started working after
+                graduating from college.^";
+            }
+        }
+
+        ! Amy
+        if (SelfPlayer.knowAmy) {
+            print "^Amy, the clerk from the convenience store:
+            ^When she went to the local college, she gave up on her dream to become a writer and
+            studied biology. Then she went for a degree as a veterinarian. After all that, she came
+            back and went to work at a local pet store. In the end, she liked her job.^";
+        }
+
+        ! Eddie
+        if (SelfPlayer.knowEddie) {
+            if (SelfPlayer.kidsGone) {
+                PEK();
+            } else {
+                if (smallParkEddie.gaveBumFlask) {
+                    PEB();
+                } else {
+                    print "^Eddie, the bum from the street:
+                    ^He did his best to get it together, managing to hold down a steady job at the
+                    convenience store. He even gave up drinking, but the damage was already done. He died
+                    of liver complications in 1995, at 57.^";
+                }
+            }
+        }
+
+        ! Harry
+        if (SelfPlayer.knowHarry) {
+            print "^Harry, the old guy from The Tavern:
+            ^He was plagued by children that would taunt him, egging his house or soaping his car.
+            He would always complain the kids were getting worse. And he was right.^";
+        }
+
+        ! Tom
+        PrintTomEnd();
+
+!    if (RESETENDGAME) {
+!        print "^Do you try to reset the machine?^^>";
+!        if (YesOrNo()) return ResetGame();
+!    }
+
+        deadflag = 3;
+        "^Your existence is shaky in this reality, and you find yourself homeless in the street.
+        Sam never lived in Sunnybrook, and you don't know anybody who could help you out.";
+  ];
+
+  [ Ending2;
+        ! Tube - The Tavern / Plug - Station / Crystal - Gallery
+        ! Worst Ending - Universe Collapses
+        ! Nick Missing / Jerry Fired / Mark - Never Find Job / Nancy NYC / Madame Sorra Stays /
+        ! Art Gallery Tanks = Record Shop Tanks - Book Store Tanks - Building Open For Rent /
+        ! Player Is Homeless / Eddie wins the lottery
+
+        ! Nick
+        if (SelfPlayer.knowNick) {
+            print "^Nick, the bartender from The Tavern:
+            ^He would say that he never found the right sound, that he was cursed.
+            So he gave up playing and headed off to New York to bartend. One rainy
+            night Nancy ran into him on the street, but she pretended she didn't know him.
+            He was never heard from again.^";
+        }
+
+        ! Jerry
+        if (SelfPlayer.knowJerry) {
+            print "^Jerry, gas station attendant:
+            ^He blamed the missing spark plug on you, and it didn't take long for everybody to start worrying.
+            After insisting on your existence, to the point of obsession, he was
+            committed for mental instability and given strong medication. He's now
+            stuck in a catatonic state.^";
+        }
+
+        ! Mark
+        if (SelfPlayer.knowMark) {
+            print "^Mark, gas station attendant:
+            ^Since Jerry was committed, Mark didn't work at the gas station because he never applied through him.
+            He did apply through Alex. Who rode him pretty hard. The interview shook up Mark. He became paranoid.
+            Always claiming someone was out to get him. He never did find a steady job.^";
+        }
+
+        ! Nancy
+        if (SelfPlayer.knowNancy) {
+            print "^Nancy, the attendant from the bowling alley:
+            ^She made it out of Sunnybrook, ending up in New York City. She became a model,
+            made a little money, and partied a lot. She met a stockbroker and married him.
+            In the end, claiming that she was happy.^";
+        }
+
+        ! Phil
+        if (SelfPlayer.knowPhil) {
+            if (alleyBarPhil.believesConspiracy) {
+                PPE();
+            } else {
+                print "^Phil, the bartender from the bowling alley:
+                ^He retired shortly after to Nevada, settling in a small community
+                outside of Clark County. He opened up a trinket shop making
+                good money into retirement. He's still out there today at 92 and active.^";
+            }
+        }
+
+        ! Madame Sorra
+        if (SelfPlayer.knowSorra) {
+            print "^Madame Sorra, the fortune teller:8
+            ^She never left Sunnybrook and became shunned by the citizens.
+            Working her black magic, she put a curse on the town. At 103, she never
+            passed on her knowledge. She now sits in bitter silence and hates the people of the city.^";
+        }
+
+        ! Sarah
+        if (SelfPlayer.knowSarah) {
+            if (artGallerySarah.answeredNoCity) {
+                print "^Sarah, curator for the gallery:
+                ^The art gallery collapsed. Sarah never recovered. But she took your advice, sold the place
+                and left the city. It became a hobby shop that failed. After that, a book store opened
+                only to close in 2011. It's still available for rent, but people whisper of a curse.^";
+            } else {
+                print "^Sarah, curator for the gallery:
+                ^The art gallery collapsed. Sarah never recovered. The place was sold, becoming a
+                hobby shop that failed. After that, a book store opened only to close in 2011.
+                It's still available for rent, but people whisper of a curse.^";
+            }
+        }
+
+        ! Amy
+        if (SelfPlayer.knowAmy) {
+            print "^Amy, the clerk from the convenience store:
+            ^She went to college, but instead of studying English, she became a paralegal and moved to
+            New York. But in an unfortunate incident, the whole firm was closed down. Many people went to jail.
+            All her education went to waste.^";
+        }
+
+        ! Eddie
+        if (SelfPlayer.knowEddie) {
+            if (SelfPlayer.kidsGone) {
+                PEK();
+            } else {
+                print "^Eddie, the bum from the street:
+                ^He had a fantastic stroke of luck. He won the lottery, bought a house
+                in Malibu, and partied so hard that he was found face down in his hot tub.
+                The luck went both ways.^";
+            }
+        }
+
+        ! Harry
+        if (SelfPlayer.knowHarry) {
+            print "^Harry, the old guy from The Tavern:
+            ^He never knew how to quit drinking. Spending his retirement down at The Tavern,
+            he pickled himself. Which ended badly.^";
+        }
+
+        ! Tom
+        PrintTomEnd();
+
+!    if (RESETENDGAME) {
+!        print "^Do you try to reset the machine?^^>";
+!        if (YesOrNo()) return ResetGame();
+!    }
+
+        deadflag = 3;
+        "^Your existence is shaky in this reality, and while you would end up homeless,
+        the universe collapses in on itself.";
+  ];
+
+  [ Ending3;
+        ! Tube - The Tavern / Plug - Shed / Crystal - Sorra
+        ! Walkthrough Ending
+        ! Closest to the starting game state - Universe Finds Harmony
+        ! Nick Homeless / Jerry Stays On / Mark Gas Station / Nancy Missing / Madame Sorra = Red's Burgers /
+        ! Art Gallery Stays Open / Player Lives In Trailer Park / Eddie Homeless / The Universe Finds Harmony
+
+        ! Nick
+        if (SelfPlayer.knowNick) {
+            print "^Nick, the bartender from The Tavern:
+            ^He knew somebody robbed him and blamed Darren, another bartender at The Tavern, getting into a fight.
+            It cost him his job. He tried to work the bar over at the alley with Phil, but it didn't pan out.
+            He ended up leaving town and was never heard from again.^";
+        }
+
+        ! Jerry
+        if (SelfPlayer.knowJerry) {
+            print "^Jerry, gas station attendant:
+            ^He stayed at the gas station, working his way up to manager over the years. ";
+            if (conanComic.giveToJerry) print "He forgot about art, only to be consumed by his job. ";
+            print "Handling all the paperwork for the station, he makes it easy for the owner.
+            Who rarely comes around. Liked by all the employees, he hired Mark and takes care
+            of everybody well.^";
+        }
+
+        ! Mark
+        if (SelfPlayer.knowMark) {
+            print "^Mark, gas station attendant:
+            ^He still slacks off at the gas station, taking the night shift whenever he can. Keeping to himself,
+            he blows off customers knowing he'll never make manager.^";
+        }
+
+        ! Nancy
+        if (SelfPlayer.knowNancy) {
+            print "^Nancy, the attendant from the bowling alley:
+            ^She left Sunnybrook, but no one heard from her again. Rumor had it she went out to New York,
+            something about meeting up with a friend. But she never ended up on the cover of a magazine. People
+            worried - they made a few phone calls but never found out what happened.^";
+        }
+
+        ! Phil
+        if (SelfPlayer.knowPhil) {
+            if (alleyBarPhil.believesConspiracy) {
+                PPE();
+            } else {
+                print "^Phil, the bartender from the bowling alley:
+                ^He stayed on until Nick left. But afterward, he cut his losses and retired to Alaska
+                only to complain about the cold. He thought he could make money carving trinkets
+                out of deer antlers, but ended up needing their stipend to survive. Still alive today,
+                he lives on his own and is 92.^";
+            }
+        }
+
+        ! Madame Sorra
+        if (SelfPlayer.knowSorra) {
+            print "^Madame Sorra, the fortune teller:
+            ^She was never heard from again. So the bank seized her property, selling
+            it locally. It became Red's Burgers, a greasy spoon that replaced the diner.
+            The place struggled in the beginning but took off in the 90s.^";
+        }
+
+        ! Sarah
+        if (SelfPlayer.knowSarah) {
+            if (artGallerySarah.tradedCat) {
+                print "^Sarah, curator for the gallery:
+                ^She made good money off the sale of the crystal ball and was able to keep the art gallery open.
+                She never married, remaining dedicated to her business, and was able to sell a few pieces of her own.^";
+            } else {
+                print "^Sarah, curator for the gallery:
+                ^She wasn't able to keep the art gallery open. She couldn't sell enough to stay afloat.
+                It closed in the early '90s and became a record shop. The records sold well until the
+                computers came in. So, strangely enough, it was turned into a computer repair shop that
+                still does well today.^";
+            }
+        }
+
+        ! Amy
+        if (SelfPlayer.knowAmy) {
+            print "^Amy, the clerk from the convenience store:
+            ^She started studying English but dropped out of college only to hang with a questionable crowd.
+            She committed a few petty crimes. But after being arrested, she changed her friends and turned her
+            life around. In the end, the only job available was the convenience store.^";
+        }
+
+        ! Eddie
+        if (SelfPlayer.knowEddie) {
+            if (SelfPlayer.kidsGone) {
+                PEK();
+            } else {
+                if (SelfPlayer.gaveEddieDollar) {
+                    PEE();
+                } else {
+                    if (smallParkEddie.gaveBumFlask) {
+                        PEB();
+                    } else {
+                        print "^Eddie, the bum from the street:
+                        ^He never left Sunnybrook, managing to live on the street longer than most.
+                        He became a sort of town mascot. They made sure he had plenty to eat
+                        and gave from their hearts.^";
+                    }
+                }
+            }
+        }
+
+        ! Harry
+        if (SelfPlayer.knowHarry) {
+            print "^Harry, the old guy from The Tavern:
+            ^He would go on to retire in Sunnybrook but moved into a mobile home
+            to save money. He was a gambler but gambled in stocks. When the crash of 2008
+            hit, he had a heart attack. He was 82, and people said he lived a good life.^";
+        }
+
+        ! Tom
+        PrintTomEnd();
+
+!    if (RESETENDGAME) {
+!        print "^Do you try to reset the machine?^^>";
+!        if (YesOrNo()) return ResetGame();
+!    }
+
+        deadflag = 2;
+        "^Your existence is stable in this reality, and you find yourself back in your mobile home.
+        Sam never married, and the universe falls into place.";
+  ];
+
+  [ Ending4;
+        ! Tube - The Tavern / Plug - Shed / Crystal - Gallery
+        ! Nick Homeless / Jerry Stays On / Mark Gas Station / Nancy Missing / Madame Sorra Stays /
+        ! Art Gallery Tanks = Amy's Flower Shop / Player Lives In Trailer Park / Eddie Homeless
+
+        ! Nick
+        if (SelfPlayer.knowNick) {
+            print "^Nick, the bartender from The Tavern:
+            ^He always blamed Steve for taking the vacuum tube, a local musician that was better
+            than him. Steve saw to it that Nick was fired from The Tavern, something about drugs.
+            Nick never recovered. He thought about working at Lowry Lanes but left town instead.
+            Ended up riding with the Outlaws until he was gunned down in 1992.^";
+        }
+
+        ! Jerry
+        if (SelfPlayer.knowJerry) {
+            print "^Jerry, gas station attendant:
+            ^He did well at the gas station";
+            if (conanComic.giveToJerry) print ", quickly giving up on his dream to become an artist. Not only did he secure a position as a manager";
+            else print ". Not only securing a position as manager";
+            print ", but he invested everything he had on the side.
+            By early 2000 he cashed out the stocks and bought the station. As the owner,
+            he became Mark's mentor, trying to pass on some life lessons.^";
+        }
+
+        ! Mark
+        if (SelfPlayer.knowMark) {
+            print "^Mark, gas station attendant:
+            ^He works at the gas station, doing as little as possible to get by,
+            taking the night shift whenever he can, so he doesn't have to deal with
+            anybody. Friends with Jerry, he hopes to inherit it one day.^";
+        }
+
+        ! Nancy
+        if (SelfPlayer.knowNancy) {
+            print "^Nancy, the attendant from the bowling alley:
+            ^She made it out of Sunnybrook but got in with the wrong crowd in New York.
+            She started using with her friend from California, and it didn't take long
+            until they were out on the street. That was the last anybody heard from her.^";
+        }
+
+        ! Phil
+        if (SelfPlayer.knowPhil) {
+            if (alleyBarPhil.believesConspiracy) {
+                PPE();
+            } else {
+                print "^Phil, the bartender from the bowling alley:
+                ^He retired shortly after to Florida but always complained about the humidity.
+                He spent his spare time walking the beach with a metal detector, never finding anything valuable.^";
+            }
+        }
+
+        ! Madame Sorra
+        if (SelfPlayer.knowSorra) {
+            print "^Madame Sorra, the fortune teller:
+            ^She never left Sunnybrook, growing into her old age as an attraction for the city.
+            People from all over would make the trip to see her. She made good money. But her heart
+            slowly died long before it gave out. She was never able to pass on her art.^";
+        }
+
+        ! Sarah
+        if (SelfPlayer.knowSarah) {
+            if (artGallerySarah.answeredNoCity) {
+                print "^Sarah, curator for the gallery:
+                ^With the cat breaking, she lost the gallery. Debt piled up. There was nothing she could do.
+                Taking your advice, she left the city and was never heard from again.
+                After sitting on the market for a while, the place was rented to Amy. She opened a flower shop.
+                Where she got the money was always in question.^";
+            } else {
+                if (artGallerySarah.answeredYesCity) {
+                    print "^Sarah, curator for the gallery:
+                    ^With the cat breaking, she lost the gallery. Debt piled up. There was nothing she could do.
+                    She tried to stay in the area, but could only find a job waiting tables at The Tavern.
+                    She lasted for a month before moving on. The gallery sat on the market for a while, but
+                    then place was rented to Amy. She opened a flower shop. Where she got the money was always in question.^";
+                } else {
+                    print "^Sarah, curator for the gallery:
+                    ^With the cat breaking, she lost the gallery. Debt piled up. There was nothing she could do.
+                    The gallery sat on the market for a while, but then place was rented to Amy. She opened a
+                    flower shop. Where she got the money was always in question.^";
+                }
+            }
+        }
+
+        ! Amy
+        if (SelfPlayer.knowAmy) {
+            print "^Amy, the clerk from the convenience store:
+            ^She went to college to get her English degree, but found writing hard
+            and dropped out. Taking all her comics, she cashed in on them with a shady
+            collector, using the money to rent the old art gallery. She turned it into a
+            flower shop. At 57, she's a model citizen and runs a modest business.^";
+        }
+
+        ! Eddie
+        if (SelfPlayer.knowEddie) {
+            if (SelfPlayer.kidsGone) {
+                PEK();
+            } else {
+                if (SelfPlayer.gaveEddieDollar) {
+                    PEE();
+                } else {
+                    print "^Eddie, the bum from the street:
+                    ^He left Sunnybrook but never left the street. Moving to Los Angeles, he
+                    rotated through some of the local shelters. He managed to get by, but never lead
+                    a healthy life. He died at 56 in 1994.^";
+                }
+            }
+        }
+
+        ! Harry
+        if (SelfPlayer.knowHarry) {
+            print "^Harry, the old guy from The Tavern:
+            ^He retired in Sunnybrook, staying in the subdivision but was never liked.
+            Keeping to himself, the neighbors would talk about him behind his back.^";
+        }
+
+        ! Tom
+        PrintTomEnd();
+
+!    if (RESETENDGAME) {
+!        print "^Do you try to reset the machine?^^>";
+!        if (YesOrNo()) return ResetGame();
+!    }
+
+        deadflag = 2;
+        "^Your existence is stable in this reality, and you find yourself back in your mobile home.
+        Sam's here too, shouting at his wife. You think to yourself how some things never change.";
+  ];
+
+  [ Ending5;
+        ! Tube - Junk Yard / Plug - Station / Crystal - Sorra
+        ! Nick Stable - Marries Sarah - Works In The Bar / Jerry Fired / Mark - Post Manager / Nancy Marries Jerry /
+        ! Madame Sorra = Cake Shop / Art Gallery Stays Open - Sarah Marries Nick / Player Lives In Trailer Park / Eddie Homeless
+
+        ! Nick
+        if (SelfPlayer.knowNick) {
+            print "^Nick, the bartender from The Tavern:
+            ^He kept his job as a bartender, somehow making it to manager. In a strange twist of fate,
+            he gave up on his dream to be a rock star and married Sarah from the art gallery. Settling,
+            they stayed together over the years and had two kids. Now at 63, he's a grandfather.^";
+        }
+
+        ! Jerry
+        if (SelfPlayer.knowJerry) {
+            if (conanComic.giveToJerry) {
+                print "^Jerry, gas station attendant:
+                ^He was fired after it was thought he was stealing from the station.
+                But he knew the truth and bounced back. Leaving the city with Nancy,
+                he went to an art school in Santa Cruz and found a job in industrial design.
+                Hoping from company to company, he had three kids with her.^";
+            } else {
+                print "^Jerry, gas station attendant:
+                ^He was fired after it was thought he was stealing from the station.
+                But he knew the truth and bounced back. Leaving the city with Nancy,
+                he moved to Santa Cruz where he found a job at a small gas station.
+                Working his way up to manager, they had three kids.^";
+            }
+        }
+
+        ! Mark
+        if (SelfPlayer.knowMark) {
+            print "^Mark, gas station attendant:
+            ^Since Jerry was fired, Mark didn't work at the gas station because he never applied through him.
+            He applied through Alex. Who rode him pretty hard. After that, Mark tried to clean up his act.
+            He even got a job for a short while with the post office, but slipped back into drugs and is
+            currently crashing on a friend's couch.^";
+        }
+
+        ! Nancy
+        if (SelfPlayer.knowNancy) {
+            print "^Nancy, the attendant from the bowling alley:
+            ^Instead of becoming a model, she hooked up with Jerry and left the city for
+            Santa Cruz. They had three kids, and at 59, she's a grandmother now. She's happy
+            but feels she could be doing more and should have a different life.^";
+        }
+
+        ! Phil
+        if (SelfPlayer.knowPhil) {
+            if (alleyBarPhil.believesConspiracy) {
+                PPE();
+            } else {
+                print "^Phil, the bartender from the bowling alley:
+                ^He retired shortly after to Las Vegas. Developing a gambling habit,
+                he spent too much of his social security. So he started eating Ramen
+                to get by and managed to hold on to his apartment.^";
+            }
+        }
+
+        ! Madame Sorra
+        if (SelfPlayer.knowSorra) {
+            print "^Madame Sorra, the fortune teller:
+            ^She was never heard from again. So the bank seized her property. A baker opened a
+            cake shop there, making custom pastries for graduations, birthdays, and weddings.
+            Doing well, he hired Amy even though she didn't graduate and married her five years later.^";
+        }
+
+        ! Sarah
+        if (SelfPlayer.knowSarah) {
+            if (artGallerySarah.tradedCat) {
+                print "^Sarah, curator for the gallery:
+                ^She sold the crystal ball making good money, hired some staff, and worked even harder.
+                Then, in a strange twist of fate, she married Nick. She was closing late one night, which
+                was becoming more frequent, and he was getting off early. He started flirting with her and
+                they hit it off. After going out for only three weeks, they tied the knot.
+                Over time they had two kids. Now, at 72, she's a grandmother.^";
+            } else {
+                print "^Sarah, curator for the gallery:
+                ^She stayed at the gallery but married Nick in a strange twist of fate.
+                They hit it off one night when he was closing early and she was closing late. After that,
+                they started going out but tied the knot only three weeks later. Over time they had two kids.
+                Now, at 72, she's a grandmother.^";
+            }
+        }
+
+        ! Amy
+        if (SelfPlayer.knowAmy) {
+            print "^Amy, the clerk from the convenience store:
+            ^She almost graduated from college but dropped out only to get a job with the local bakery.
+            Falling in love with the owner over time, she married him five years later but never
+            had any kids.^";
+        }
+
+        ! Eddie
+        if (SelfPlayer.knowEddie) {
+            if (SelfPlayer.kidsGone) {
+                PEK();
+            } else {
+                if (SelfPlayer.gaveEddieDollar) {
+                    PEE();
+                } else {
+                    if (smallParkEddie.gaveBumFlask) {
+                        PEB();
+                    } else {
+                        print "^Eddie, the bum from the street:
+                        ^He stayed in Sunnybrook. People tried to help him out. He even got a job cleaning up the
+                        bowling alley for a while, but he never got off the street. Keep drinking to the point
+                        of an early death at 48. He died in 1986.^";
+                    }
+                }
+            }
+        }
+
+        ! Harry
+        if (SelfPlayer.knowHarry) {
+            print "^Harry, the old guy from The Tavern:
+            ^He retired in Sunnybrook only to make a killing in junk bonds. He moved out of the subdivision
+            and into the high-rise complex. Tipped the doorman well and kept to himself for the few years he had left.^";
+        }
+
+        ! Tom
+        PrintTomEnd();
+
+!    if (RESETENDGAME) {
+!        print "^Do you try to reset the machine?^^>";
+!        if (YesOrNo()) return ResetGame();
+!    }
+
+        deadflag = 2;
+        "^Your existence is stable in this reality, and you find yourself back in your mobile home.
+        Sam's here too, shouting at his wife. You think to yourself how some things never change.";
+  ];
+
+  [ Ending6;
+        ! Tube - Junk Yard / Plug - Station / Crystal - Gallery
+        ! Nick Stable - Single - Opens Nick's Pizzeria / Jerry Fired / Mark - Post Manager / Nancy Marries Jerry /
+        ! Madame Sorra Stays / Art Gallery Tanks = Nick's Pizza / Player Lives In Trailer Park / Eddie Homeless
+
+        ! Nick
+        if (SelfPlayer.knowNick) {
+            print "^Nick, the bartender from The Tavern:
+            ^He lost his job as a bartender but had some extra cash stashed away.
+            He had to sell all his gear, giving up on his dream, took the money, and rented the old art
+            gallery at a discount. He put all he had into it, opening a pizzeria. It was a risk, but the
+            shop took off in the '90s. He bought it out by the end of the decade.^";
+        }
+
+        ! Jerry
+        if (SelfPlayer.knowJerry) {
+            if (conanComic.giveToJerry) {
+                print "^Jerry, gas station attendant:
+                ^Even though he denied it, he was fired after they thought he was
+                stealing from the station. After graduating from high school, he
+                went to community college, majoring in art, and got a job at a local
+                advertising firm out in Springfield. He became friends with Nancy
+                after college, making her laugh whenever they were together. They hit it off and
+                finally married in 1988.^";
+            } else {
+                print "^Jerry, gas station attendant:
+                ^Even though he denied it, he was fired after they thought he was
+                stealing from the station. After graduating from high school, he
+                went to work at the convenience store. He made manager and became
+                friends with Nancy, making her laugh whenever they were together.
+                They hit it off and finally married in 1988.^";
+            }
+        }
+
+        ! Mark
+        if (SelfPlayer.knowMark) {
+            print "^Mark, gas station attendant:
+            ^Since Jerry was fired, Mark didn't work at the gas station because he never applied through him.
+            He did apply through Alex. Who rode him pretty hard. After the interview, Mark worked to clean
+            up his act. Then he went and took a job with the post office. He's lined up to make manager any day now.^";
+        }
+
+        ! Nancy
+        if (SelfPlayer.knowNancy) {
+            if (conanComic.giveToJerry) {
+                print "^Nancy, the attendant from the bowling alley:
+                ^She did make it out of town, but not far. And she never became a model. She never
+                put it out there. She became friends with Jerry, enjoying his company, and married
+                him in 1988. But they never had kids, and she feels her life is empty.^";
+            } else {
+                print "^Nancy, the attendant from the bowling alley:
+                ^She never made it out of Sunnybrook. She thought about becoming a model, but never
+                put it out there. She became friends with Jerry, enjoying his company, and married
+                him in 1988. But they never had kids, and she feels her life is empty.^";
+            }
+        }
+
+        ! Phil
+        if (SelfPlayer.knowPhil) {
+            if (alleyBarPhil.believesConspiracy) {
+                PPE();
+            } else {
+                print "^Phil, the bartender from the bowling alley:
+                ^He retired shortly after to California, buying a mobile home in a trailer park.
+                Selling homemade trinkets to tourists, he managed to live a simple life in the desert.^";
+            }
+        }
+
+        ! Madame Sorra
+        if (SelfPlayer.knowSorra) {
+            print "^Madame Sorra, the fortune teller:
+            ^She was never content. Always restless and sour. She spent years looking for someone
+            to pass her knowledge on to but was disappointed each time. She became discouraged and gave up.
+            Anger settling into her heart in her final years.^";
+        }
+
+        ! Sarah
+        if (SelfPlayer.knowSarah) {
+            if (artGallerySarah.answeredNoCity) {
+                print "^Sarah, curator for the gallery:
+                ^The gallery went under after she broke the crystal cat.
+                Taking your advice, she left town and was never heard from again.
+                The place sat on the market for a while. Then Nick rented it out after he lost his job.
+                He turned it into a pizzeria, making enough money to buy the place out in the late '90s.^";
+            } else {
+                if (artGallerySarah.answeredYesCity) {
+                    print "^Sarah, curator for the gallery:
+                    ^The gallery went under after she broke the crystal cat.
+                    She tried to stay in the area, but could only find a job waiting tables at The Tavern.
+                    She lasted for a month before moving on.
+                    The gallery sat on the market for a while, and then Nick rented it out after he lost his job.
+                    He turned it into a pizzeria, making enough money to buy the place out in the late '90s.^";
+                } else {
+                    print "^Sarah, curator for the gallery:
+                    ^The gallery went under after she broke the crystal cat.
+                    The place sat on the market for a while, and then Nick rented it out after he lost his job.
+                    He turned it into a pizzeria, making enough money to buy the place out in the late '90s.^";
+                }
+            }
+        }
+
+        ! Amy
+        if (SelfPlayer.knowAmy) {
+            print "^Amy, the clerk from the convenience store:
+            ^She graduated from college with a degree in English. Not being able to find a job in Sunnybrook,
+            she took a chance and relocated to Massachusetts. Settling in Cambridge. In a strange turn of events,
+            and an incredible stroke of luck, she became a computer programmer.^";
+        }
+
+        ! Eddie
+        if (SelfPlayer.knowEddie) {
+            if (SelfPlayer.kidsGone) {
+                PEK();
+            } else {
+                if (SelfPlayer.gaveEddieDollar) {
+                    PEE();
+                } else {
+                    print "^Eddie, the bum from the street:
+                    ^He left Sunnybrook, finding a home under a bridge in Fort
+                    Lauderdale. He ate from Meals on Wheels and hustled the street
+                    for spare change, making enough for a drink or two every night.
+                    But it was a short life. He died in 1984 at 46.^";
+                                  }
+            }
+        }
+
+        ! Harry
+        if (SelfPlayer.knowHarry) {
+            print "^Harry, the old guy from The Tavern:
+            ^He retired in Sunnybrook, staying in the subdivision. He got by making ends meet.
+            But when the stock market tanked in 2008, he died from a heart attack. He was 82.
+            People said he lived a good life.^";
+        }
+
+        ! Tom
+        PrintTomEnd();
+
+!    if (RESETENDGAME) {
+!        print "^Do you try to reset the machine?^^>";
+!        if (YesOrNo()) return ResetGame();
+!    }
+        deadflag = 2;
+        "^Your existence is stable in this reality, and you find yourself back in your mobile home.
+        Sam's here too, shouting at his wife. You think to yourself how some things never change.";
+  ];
+
+  [ Ending7;
+        ! Tube - Junk Yard / Plug - Shed / Crystal - Sorra
+        ! Nick Famous - Marries Nancy - Opens the Old Indian Smoke Shop selling overpriced cigars / Jerry Stays On
+        ! Mark Gas Station / Nancy Marries Nick / Madame Sorra = Smoke Shop / Art Gallery Sells = Coffee Shop -
+        ! Sarah tours Europe, settling in Copenhagen / Player Lives In Subdivision / Eddie Missing
+
+        ! Nick
+        if (SelfPlayer.knowNick) {
+            print "^Nick, the bartender from The Tavern:
+            ^He made some noise in Los Angeles, playing with a few bands, but never
+            went far enough to hit it big. After coming back to Sunnybrook, he married
+            Nancy and opened the Old Indian Smoke Shop. He sold all his gear to come up
+            with the money. At 63, he's looking to retire soon.^";
+        }
+
+        ! Jerry
+        if (SelfPlayer.knowJerry) {
+            print "^Jerry, gas station attendant:
+            ^He stayed with the gas station, becoming head mechanic.
+            But after a run-in with Nick, he shifted his focus wanting to manage the place. He ";
+            if (conanComic.giveToJerry) print "gave up on his hobby, never pursuing art, eventually becoming";
+            else print "eventually became";
+            print " the manager. He also was the one to hire Mark giving him a chance where others wouldn't.
+            But quietly, to himself, he feels a bit let down.
+            At 57, he knows his life is complete.^";
+        }
+
+        ! Mark
+        if (SelfPlayer.knowMark) {
+            print "^Mark, gas station attendant:
+            ^He still works at the gas station, but his ambition is to hit it big in EDM.
+            Music is in his soul, and he wants to do it forever. Not being able to afford the
+            tools, he downloaded them off the Internet.^";
+        }
+
+        ! Nancy
+        if (SelfPlayer.knowNancy) {
+            print "^Nancy, the attendant from the bowling alley:
+            ^She became a model in New York City. Even ended up on the cover of Vogue.
+            But in a few years, younger women began to crowd her out. She returned
+            to Sunnybrook and married Nick. She encouraged him to sell his equipment but
+            was surprised when he opened up the Old Indian.^";
+        }
+
+        ! Phil
+        if (SelfPlayer.knowPhil) {
+            if (alleyBarPhil.believesConspiracy) {
+                PPE();
+            } else {
+                print "^Phil, the bartender from the bowling alley:
+                ^He retired shortly after to Arizona enjoying the sand and the heat.
+                He took up golf in his spare time and takes relatives to local sites or restaurants
+                when they are in town.^";
+            }
+        }
+
+        ! Madame Sorra
+        if (SelfPlayer.knowSorra) {
+            print "^Madame Sorra, the fortune teller:
+            ^She was never heard from again. So the bank seized her property. But
+            no one wanted it. It sat there for years. Vacant. When Nick came back
+            from Los Angeles, he bought it at a great price, turning it into the
+            Old Indian Smoke Shop selling overpriced cigars.^";
+        }
+
+        ! Sarah
+        if (SelfPlayer.knowSarah) {
+            if (artGallerySarah.answeredNoCity) {
+                if (artGallerySarah.tradedCat) {
+                    print "^Sarah, curator for the gallery:
+                    ^She took your advice about selling everything. The crystal ball, the art gallery,
+                    all her stuff, and took the money with her to Europe. She toured all of it before settling
+                    on Copenhagen, finding Denmark to her liking.^";
+                } else {
+                    print "^Sarah, curator for the gallery:
+                    ^She took your advice about selling the art gallery. Then she
+                    took the money to Europe. She toured the countryside for a while and settled in
+                    Copenhagen, finding Denmark to her liking.^";
+                }
+            } else {
+                if (artGallerySarah.answeredYesCity) {
+                    if (artGallerySarah.tradedCat) {
+                        print "^Sarah, curator for the gallery:
+                        ^She always wanted to leave Sunnybrook. Instead, she sold the crystal ball,
+                        which gave her the money to keep the gallery open. She thought about getting
+                        married, even hit on Nick once after he came back from L.A., but she never
+                        found anybody.^";
+                    } else {
+                        print "^Sarah, curator for the gallery:
+                        ^She always wanted to leave Sunnybrook. Instead, she kept the gallery open.
+                        It was the only thing she knew, and she couldn't let her parents down.^";
+                    }
+                } else {
+                    if (artGallerySarah.tradedCat) {
+                        print "^Sarah, curator for the gallery:
+                        ^She sold everything. The crystal ball, the art gallery, all her stuff,
+                        and took the money with her to Europe. She toured the western and eastern
+                        halves before settling on Copenhagen, finding Denmark to her liking.^";
+                    } else {
+                        print "^Sarah, curator for the gallery:
+                        ^She sold the art gallery and took the money to Europe.
+                        She toured the countryside for a while and settled in
+                        Copenhagen, finding Denmark to her liking.^";
+                    }
+                }
+            }
+        }
+
+        ! Amy
+        if (SelfPlayer.knowAmy) {
+            print "^Amy, the clerk from the convenience store:
+            ^She dropped out of college, failing to get her English degree. Always wanting to write, she
+            kept a notebook by her side but would never let anyone read it. In 2010 she started writing
+            a blog but gave up a few years later. At 57, she still hopes to be published even though
+            she's not sure how.^";
+        }
+
+        ! Eddie
+        if (SelfPlayer.knowEddie) {
+            if (SelfPlayer.kidsGone) {
+                PEK();
+            } else {
+                if (SelfPlayer.gaveEddieDollar) {
+                    PEE();
+                } else {
+                    if (smallParkEddie.gaveBumFlask) {
+                        PEB();
+                    } else {
+                        print "^Eddie, the bum from the street:
+                        ^He didn't leave Sunnybrook. He just faded away. The people
+                        forgot about him. They never mentioned his name. Somehow he
+                        managed to get by but was found dead in the park in 1994. He was 56.^";
+                    }
+                }
+            }
+        }
+
+        ! Harry
+        if (SelfPlayer.knowHarry) {
+            print "^Harry, the old guy from The Tavern:
+            ^He moved out of the subdivision to save money by living in the trailer park. He spent all his extra
+            dough on lottery tickets but never won a thing. In 1996 he died at the age of 70.^";
+        }
+
+        ! Tom
+        PrintTomEnd();
+
+!    if (RESETENDGAME) {
+!        print "^Do you try to reset the machine?^^>";
+!        if (YesOrNo()) return ResetGame();
+!    }
+        deadflag = 2;
+        "^Your existence shifts in this reality, and you find yourself living in the subdivision. You're moving on up.";
+  ];
+
+  [ Ending8;
+        ! Tube - Junk Yard / Plug - Shed / Crystal - Gallery
+        ! Nick Famous - Marries Nancy - Opens Nick's Tattoos / Jerry Stays On / Mark Gas Station /
+        ! Nancy Marries Nick / Madame Sorra Stays / Art Gallery Tanks = Tattoo Shop Owned By Nick /
+        ! Player Lives In Complex / Eddie Missing / The Universe Is Enriched
+
+        ! Nick
+        if (SelfPlayer.knowNick) {
+            print "^Nick, the bartender from The Tavern:
+            ^He made a name for himself in Los Angeles, even wrote a hit. It charted on
+            Billboard for a few weeks before taking a dive. So he took the money and ran.
+            He came back to Sunnybrook in the 90s and opened a tattoo shop where the art gallery
+            had been. When Nancy came back, she knew she had to have him. They are still
+            married to this day.^";
+        }
+
+        ! Jerry
+        if (SelfPlayer.knowJerry) {
+            print "^Jerry, gas station attendant:
+            ^He liked working on cars and stayed with the station";
+            if (conanComic.giveToJerry) print ", never taking up art even though he had a bit of interest";
+            print ". He became the head mechanic for the place and turned down a
+            position for management, even though he ended up doing the hiring.
+            He was the one to interview Mark and gave him a chance where others
+            wouldn't.^";
+        }
+
+        ! Mark
+        if (SelfPlayer.knowMark) {
+            print "^Mark, gas station attendant:
+            ^With no ambition beyond working at the gas station, he's disillusioned by the
+            position and hopes to move on one day.^";
+        }
+
+        ! Nancy
+        if (SelfPlayer.knowNancy) {
+            print "^Nancy, the attendant from the bowling alley:
+            ^She became an actress in New York City, instead of modeling, working the theater until finally
+            landing a part in Les Miserables. After her brief flirt with success, she returned to Sunnybrook
+            in the '90s finding Nick had made a name for himself. She married him two months later but never
+            had any kids.^";
+        }
+
+        ! Phil
+        if (SelfPlayer.knowPhil) {
+            if (alleyBarPhil.believesConspiracy) {
+                PPE();
+            } else {
+                print "^Phil, the bartender from the bowling alley:
+                ^He retired shortly after to Bermuda, returning to the Caribbean. He opened a scooter shop for tourists. It cost him
+                a lot in maintenance, but he made it back plus some. In his spare time, he enjoyed scuba diving.^";
+            }
+        }
+
+        ! Madame Sorra
+        if (SelfPlayer.knowSorra) {
+            print "^Madame Sorra, the fortune teller:
+            ^She was looking for someone to take her mantle. To pick up the reins. Carry on the traditions.
+            But they never came. She didn't find that special someone and grew into old age with despair in
+            her heart.^";
+        }
+
+        ! Sarah
+        if (SelfPlayer.knowSarah) {
+            if (artGallerySarah.answeredNoCity) {
+                print "^Sarah, curator for the gallery:
+                ^She lost the gallery after breaking the crystal cat. She couldn't afford the payments.
+                Taking your advice, she left the city and was never heard from again.
+                The place sat empty for years. Nick came back and turned it into the Crazy Monkey, a tattoo shop.
+                It was slow to get going, but by the end of 2000, he had to turn away people.^";
+            } else {
+                if (artGallerySarah.answeredYesCity) {
+                    print "^Sarah, curator for the gallery:
+                    ^She lost the gallery after breaking the crystal cat. She couldn't afford the payments.
+                    She tried to stay in the area, but could only find a job waiting tables at The Tavern.
+                    She lasted for a month before moving on.
+                    The gallery sat empty for years. Nick came back and turned it into the Crazy Monkey, a tattoo shop.
+                    It was slow to get going, but by the end of 2000, he had to turn away people.^";
+                } else {
+                    print "^Sarah, curator for the gallery:
+                    ^She lost the gallery after breaking the crystal cat. The
+                    accident cost her everything.  After the gallery closed down, it
+                    sat empty for years. Nick came back and turned it into the
+                    Crazy Monkey, a tattoo shop. It was slow to get going, but
+                    by the end of 2000, he had to turn away people.^";
+                }
+            }
+        }
+
+        ! Amy
+        if (SelfPlayer.knowAmy) {
+            ! Majoring In English
+            print "^Amy, the clerk from the convenience store:
+            ^She graduated from college, majoring in English, then moved out to New York and got a job
+            as an editor for The Village Voice. Between writing copy for the magazine and the
+            hustle of New York, she managed to write a mystery novel. At 57 she never
+            married, and the book didn't do that well.^";
+        }
+
+        ! Eddie
+        if (SelfPlayer.knowEddie) {
+            if (SelfPlayer.kidsGone) {
+                PEK();
+            } else {
+                if (SelfPlayer.gaveEddieDollar) {
+                    PEE();
+                } else {
+                    print "^Eddie, the bum from the street:
+                    ^He left Sunnybrook, but nobody knew what happened to him.
+                    He drifted through the south and got caught up in some strange voodoo.
+                    A victim of a cult, he died in 1990 at 52. Nobody knew.^";
+                }
+            }
+        }
+
+        ! Harry
+        if (SelfPlayer.knowHarry) {
+            print "^Harry, the old guy from The Tavern:
+            ^He left Sunnybrook and retired to southern Arizona, venturing into Mexico now and then
+            to make clandestine deals. Wanted by the law, he died a free man in Yuma.^";
+        }
+
+        ! Tom
+        PrintTomEnd();
+
+!    if (RESETENDGAME) {
+!        print "^Do you try to reset the machine?^^>";
+!        if (YesOrNo()) return ResetGame();
+!    }
+        deadflag = 2;
+        "^Your existence shifts in this reality, and you find yourself living in the high-rise complex.
+        The universe is enriched. You've hit the top.";
+  ];
+
+  [ PrintTomEnd;
+        ! Tom
+        if (mapleRoadTom.gavePlate) {
+            print "^Tom, UFO fanatic:
+            ^One day he went missing, and everyone started to joke about how the aliens took him.^";
+        } else {
+            print "^Tom, UFO fanatic:
+            ^He's still crazy as ever.^";
+        }
+  ];
+
+  ! Malgorzata:
+  ! 1. Came Up with Scientist Notes
+  ! 2. Wanted to Trade the Crystal Ball for the Cat
+  ! 3. Waited For Jerry, Just Not Long Enough
+  ! 4. Did not ask Mark his name
+
+  ! Jimmy:
+  ! Rework the beginning so the game has more impact - Put Tom in the game
+  ! ** Put in a way to switch between times, fixing the puzzle how the player sees fit
+  ! ** - This became a question at the end that would reset the puzzle half of the game.
+  ! Change Title from Temporal Wake to Entangled
+
+  ! Vivienne:
+  ! Work on hints - need better clues in conversations
+  ! Take care of parser error for Ask Routine
+  ! Take out the reset ending, just end it
+  ! Add Follow verb
+
+  ! Adam:
+  ! Call the kid a bully in the alley - so people have a better idea of what's going on at the end
+  ! Show the watch to people, they should react to the year being set to 2020.
+  ! Show palm to Sorra tries to show sign
+  ! Say yes to Jerry about the plug
+  ! Found a missing bottle, the one Jerry is drinking
+  ! Came up with Sarah having a secret habit of smoking
+
+  ! Mathbrush:
+  ! Said: 'time travel as plot contrivance', with the creator of the time machine just randomly disappearing
+  ! I put in giving the notes to the kid, Mel, to tie it in with him growing up to be the scientist
+  ! Also said some people might take issue with Sorra being called a gypsy, so she became a fortune teller
+  ! Said talk to Andrew Schultz
+
+  ! Daniel Talsky:
+  ! Found that going IN to the tattoo shop took you to the gallery instead / SOUTH worked fine
+  ! Found missing objects like the partition in the Tattoo Shop
+
+  ! Andrew Schultz:
+  ! Said to put in a VERBS command. Also, to change ASK ABOUT to just [A] - Same with TELL
+  ! Said to put the last 3 puzzles in ROT13 in the walkthrough
+  ! Said to let people know that the walkthrough is the minimum needed for a successful ending
+
+  ! Alex Harby:
+  ! Gave me a full transcipt, played until sun rise, over 800 turns
+  ! Lots of little things, dealing with grammar and synonyms
+  ! Also solved all three of the alternate ends in that play through
+  ! Found that Bill the owner was treated as dollar bill in some places, changed to Bob
+
+  ! AKheon:
+  ! He did the final play through, to make sure nothing was broken in the game.
+  ! He found little things, but the game was responsive.
+
+  [ GameCredits;
+        style fixed;
+        print "^Author:
+        ^                 Dark Star
+        ^^Testers:
+        ^                 Adam Wasserman
+        ^                 AKheon
+        ^                 Alex Harby
+        ^                 Andrew Schultz
+        ^                 Daniel Talsky
+        ^                 Malgorzata Reczko
+        ^                 Mathbrush
+        ^                 Vivienne Dunstan
+        ^";
+        ! PageBreak();
+        print "^Special Thanks:
+        ^                 Graham Nelson
+        ^                 Jacqueline Ashwell
+        ^                 Jimmy Maher";
+        style roman;
+        "";
+  ];
+
+  [ CommonVerbsPrint;
+        print "Here are the common verbs used in this game.^^";
+        style fixed;
+        print "NORTH      [N]^";
+        print "SOUTH      [S]^";
+        print "EAST       [E]^";
+        print "WEST       [W]^";
+        print "NORTHEAST  [NE]^";
+        print "NORTHWEST  [NW]^";
+        print "SOUTHEAST  [SE]^";
+        print "SOUTHWEST  [SW]^";
+        print "IN^";
+        print "OUT^";
+        print "^";
+        print "EXAMINE    [X]^";
+        print "INVENTORY  [I]^";
+        print "READ^";
+        print "TAKE^";
+        print "PUSH^";
+        print "PUT^";
+        print "TURN^";
+        print "GIVE^";
+        print "SHOW^";
+        print "DROP^";
+        print "^";
+        print "TALK^";
+        print "ASK^";
+        print "TELL^";
+        print "ASK ABOUT  [A]^";
+        print "TELL ABOUT [T]^";
+        print "SAY <YES/NO>^";
+        print "^";
+        style roman;
+
+        print "You can TALK to characters and question them with the subjects they give you. Use the ask/tell system, i.e. ASK ABOUT <SUBJECT>, or TELL ABOUT <SUBJECT>. You can also answer them with YES or NO, or show them different objects.";
+        style roman;
+        "";
+  ];
+
+  [ Amusing;
+      "Did you ask Amy about Wonder Woman?
+      ^Or look at the walls in the bowling alley?
+      ^Or drop the crystal ball in front of Sarah?
+      ^Or ask Tom about himself?";
+  ];
+
+! Print Routines
+
+  [ PBT; "It would take a bucket of thinner to clean that."; ];
+
+  [ PFW; "A faint whisper can be heard in the back of your mind."; ];
+
+  [ PHP; "~I'm sorry. We have plenty, but I wonder if it will get me through the night. Try somewhere else.~"; ];
+
+  [ PYT; "You take the rich autumn air into your lungs for a minute."; ];
+
+  [ PEB;
+        print "^Eddie, the bum from the street:
+        ^He continued to drink harder than ever, and years of boozing didn't
+        take long to catch up to him. He could've gotten off the street, even
+        had an opportunity here and there, but his body gave out five years later in 1985.
+        He was 47.^";
+  ];
+
+  [ PEE;
+        print "^Eddie, the bum from the street:
+        ^He decided to get off the street and got a job bussing tables at The Tavern.
+        He moved into the trailer park and had a comfortable life for a short while
+        before his body gave out in 1995. He was 57.^";
+  ];
+
+  [ PEK;
+        print "^Eddie, the bum from the street:
+        ^He tried to get by on the streets, but a gang sprang up.
+        Lead by the bully from the bowling alley. As the kids grew,
+        their antics finally drove the bum out of town. Eddie was
+        never heard from again.^";
+  ];
+
+  [ PPE;
+        print "^Phil, the bartender from the bowling alley:
+        ^He retired shortly after to Nevada. Stirred up by conspiracies from your
+        conversation, he broke into Area 51. After being arrested, he plead insanity
+        but got ten years.^";
+  ];
+
+  [ roomSleep;
+        if (basement.firstTime) {
+            if (mapleRoadTom.helpTom) "This is no time to rest, you need to help Tom.";
+            if (bowlingAlley.firstTime) "This is no time to rest, you need to find Sam.";
+            "This is no time to rest, you need to find out what is going on.";
+        }
+        "This is no time to rest, you need to get out of here.";
+  ];
+
+  [ TestGiveObject;
+        if (second == bowlingAlleyBartender || second == bowlingAlleyGirl || second == gravelRoadAttendant) "You can't do that from here.";
+        if (second == alleyBarCustomers || second == bowlingAlleyCustomers) "They seem content to themselves, and they've always been cliquish.";
+        if (second has pluralname) "They don't seem interested.";
+        if (second has male) "He doesn't seem interested.";
+        if (second has female) "She doesn't seem interested.";
+        "You better hold on to that.";
+  ];
+
+! Action Sub Routines
+
+!  [ AskNameSub w1;
+!        wn = consult_from;
+!        w1 = NextWord();
+!        if (w1 == 'name') {
+!            <<Ask noun w1>>;
+!        }
+!        "At the moment, even the simplest questions are confusing.";
+!  ];
+
+  [ AskAboutTopicSub;
+        if (player in gasStation) {
+            if (basement.firstTime) <<Ask gasStationMark>>;
+            if (gasStationJerry in gasStation) <<Ask gasStationJerry>>;
+        }
+        if (player in artGallery) <<Ask artGallerySarah>>;
+        if (player in tattooShop) <<Ask tattooShopNick>>;
+        if (player in convenienceStore) {
+            if (basement.firstTime) <<Ask convenienceStoreOldAmy>>;
+            if (convenienceStoreKid in convenienceStore) <<Ask convenienceStoreKid>>;
+            if (convenienceStoreAmy in convenienceStore) <<Ask convenienceStoreAmy>>;
+        }
+        if (player in madameSorras) {
+            if (basement.firstTime) <<Ask oldMadameSorra>>;
+            if (madameSorrasMadameSorra in madameSorras) <<Ask madameSorrasMadameSorra>>;
+        }
+        if (player in smallPark) {
+            if (smallParkEddie in smallPark) <<Ask smallParkEddie>>;
+        }
+        if (player in theTavern) {
+            if (theTavernHarry in theTavern) <<Ask theTavernHarry>>;
+            if (theTavernNick in theTavern) <<Ask theTavernNick>>;
+        }
+        if (player in mapleRoad) {
+            if (mapleRoadTom in mapleRoad) <<Ask mapleRoadTom>>;
+        }
+        if (player in alleyBar) <<Ask alleyBarPhil>>;
+        if (player in alleyRental) <<Ask alleyRentalNancy>>;
+        if (player in bowlingAlley) {
+            if (bowlingAlleyKids in bowlingAlley) <<Ask bowlingAlleyKids>>;
+        }
+        if (player in outsideComplex) <<Ask outsideComplexDoorman>>;
+        if (player in outsideJoesBar) {
+            if (theTavernHarry in outsideJoesBar) <<Ask theTavernHarry>>;
+        }
+        "It looks like you're trying to talk to yourself. That's a little strange.";
+  ];
+
+  [ AskForTopicSub;
+        if (player in gasStation) {
+            if (basement.firstTime) <<AskCreatureFor gasStationMark>>;
+            if (gasStationJerry in gasStation) <<AskCreatureFor gasStationJerry>>;
+        }
+        if (player in artGallery) <<AskCreatureFor artGallerySarah>>;
+        if (player in tattooShop) <<AskCreatureFor tattooShopNick>>;
+        if (player in convenienceStore) {
+            if (basement.firstTime) <<AskCreatureFor convenienceStoreOldAmy>>;
+            if (convenienceStoreKid in convenienceStore) <<AskCreatureFor convenienceStoreKid>>;
+            if (convenienceStoreAmy in convenienceStore) <<AskCreatureFor convenienceStoreAmy>>;
+        }
+        if (player in madameSorras) {
+            if (basement.firstTime) <<AskCreatureFor oldMadameSorra>>;
+            if (madameSorrasMadameSorra in madameSorras) <<AskCreatureFor madameSorrasMadameSorra>>;
+        }
+        if (player in smallPark) {
+            if (smallParkEddie in smallPark) <<AskCreatureFor smallParkEddie>>;
+        }
+        if (player in theTavern) {
+            if (theTavernHarry in theTavern) <<AskCreatureFor theTavernHarry>>;
+            if (theTavernNick in theTavern) <<AskCreatureFor theTavernNick>>;
+        }
+        if (player in mapleRoad) {
+            if (mapleRoadTom in mapleRoad) <<AskCreatureFor mapleRoadTom>>;
+        }
+        if (player in alleyBar) <<AskCreatureFor alleyBarPhil>>;
+        if (player in alleyRental) <<AskCreatureFor alleyRentalNancy>>;
+        if (player in bowlingAlley) {
+            if (bowlingAlleyKids in bowlingAlley) <<AskCreatureFor bowlingAlleyKids>>;
+        }
+        if (player in outsideComplex) <<AskCreatureFor outsideComplexDoorman>>;
+        if (player in outsideJoesBar) {
+            if (theTavernHarry in outsideJoesBar) <<AskCreatureFor theTavernHarry>>;
+        }
+        "It looks like you're trying to talk to yourself. That's a little strange.";
+  ];
+
+  [ TellAboutTopicSub;
+        if (player in gasStation) {
+            if (basement.firstTime) <<Tell gasStationMark>>;
+            if (gasStationJerry in gasStation) <<Tell gasStationJerry>>;
+        }
+        if (player in artGallery) <<Tell artGallerySarah>>;
+        if (player in tattooShop) <<Tell tattooShopNick>>;
+        if (player in convenienceStore) {
+            if (basement.firstTime) <<Tell convenienceStoreOldAmy>>;
+            if (convenienceStoreKid in convenienceStore) <<Tell convenienceStoreKid>>;
+            if (convenienceStoreAmy in convenienceStore) <<Tell convenienceStoreAmy>>;
+        }
+        if (player in madameSorras) {
+            if (basement.firstTime) <<Tell oldMadameSorra>>;
+            if (madameSorrasMadameSorra in madameSorras) <<Tell madameSorrasMadameSorra>>;
+        }
+        if (player in smallPark) {
+            if (smallParkEddie in smallPark) <<Tell smallParkEddie>>;
+        }
+        if (player in theTavern) {
+            if (theTavernHarry in theTavern) <<Tell theTavernHarry>>;
+            if (theTavernNick in theTavern) <<Tell theTavernNick>>;
+        }
+        if (player in mapleRoad) {
+            if (mapleRoadTom in mapleRoad) <<Tell mapleRoadTom>>;
+        }
+        if (player in alleyBar) <<Tell alleyBarPhil>>;
+        if (player in alleyRental) <<Tell alleyRentalNancy>>;
+        if (player in bowlingAlley) {
+            if (bowlingAlleyKids in bowlingAlley) <<Tell bowlingAlleyKids>>;
+        }
+        if (player in outsideComplex) <<Tell outsideComplexDoorman>>;
+        if (player in outsideJoesBar) {
+            if (theTavernHarry in outsideJoesBar) <<Tell theTavernHarry>>;
+        }
+        "It looks like you're trying to talk to yourself. That's a little strange.";
+  ];
+
+  [ FollowSub;
+        if (noun has female) "She's not going anywhere.";
+        if (noun has male) "He's not going anywhere.";
+        "That's not going anywhere.";
+  ];
+
+  [ GoBehindSub; "You don't need to do that."; ];
+
+  [ KickSub; "Violence isn't the answer to this one."; ];
+
+  [ KnockSub; "You don't need to do that."; ];
+
+  [ PetSub;
+        if (noun has animate) {
+            if (noun has female) "She wouldn't appreciate that.";
+            "He wouldn't appreciate that.";
+        }
+        if (noun has pluralname) "You'd rather not touch them.";
+        "You'd rather not touch it.";
+  ];
+
+  [ PlaySub; "You don't need to do that."; ];
+
+  [ ReadSub; <<Examine noun>>; ];
+
+  [ ReplaceSub; "That's not how it works."; ];
+
+  [ RentSub; return L__M(##Buy, 1); ];
+
+  [ RideSub; "You can't do that."; ];
+
+  [ AskCreatureForSub; "They don't understand."; ];
+
+  [ SmellNounSub;
+        if (player in basement)
+            "The overpowering smell of burnt hair and cooked meat pervades the room.";
+        if (player in artGallery) "The room has a sickeningly sweet odor that permeates everything.";
+        if (player in convenienceStore) "The store smells clean. Disinfectant lingers strong in the air.";
+        if (player in madameSorras) "The faint scent of burning incense can be smelled throughout the room.";
+        if (player in tattooShop) "A sharp iron smell lingers in the air, like leather and blood.";
+        if (player in theTavern) "Breathing in, the smell of stale cigarettes and split booze hangs in the air.";
+        if (player in shed) "Breathing in, you can tell the air is moldy.";
+        if (player in bowlingAlley || player in alleyRental || player in alleyBar)
+            "Cigarette smoke annihilates your nostrils. You wonder how people can breathe.";
+        if (player in kitchenHouse || player in hallwayHouse || player in livingRoom)
+            "The place smells musty as you take mold into your lungs.";
+        "You smell nothing unusual.";
+  ];
+
+  [ SmellTest;
+      if (player in basement)
+          "The overpowering smell of burnt hair and cooked meat pervades the room.";
+      if (playerHands.handsStink) "The stench of rot and grease comes from your hands since you reached into the dumpster. It's overpowering.";
+      if (player in artGallery) "The room has a sickeningly sweet odor that permeates everything.";
+      if (player in convenienceStore) "The store smells clean. Disinfectant lingers strong in the air.";
+      if (player in madameSorras) "The faint scent of burning incense can be smelled throughout the room.";
+      if (player in tattooShop) "A sharp iron smell lingers in the air, like leather and blood.";
+      if (player in theTavern) "Breathing in, the smell of stale cigarettes and split booze hangs in the air.";
+      if (player in shed) "Breathing in, you can tell the air is moldy.";
+      if (player in bowlingAlley || player in alleyRental || player in alleyBar)
+          "Cigarette smoke annihilates your nostrils. You wonder how people can breathe.";
+      if (player in kitchenHouse || player in hallwayHouse || player in livingRoom)
+          "The place smells musty as you take mold into your lungs.";
+      rfalse;
+  ];
+
+
+  [ TalkSub; "You can only do that to something animate."; ];
+
+  ! [ UndoCommandSub; "Choices can't be undone in life or this game."; ];
+
+  [ WaveHandsRoomSub;
+        if (player in gasStation) {
+            if (basement.firstTime) <<WaveObject gasStationMark>>;
+            if (gasStationJerry in gasStation) <<WaveObject gasStationJerry>>;
+        }
+        if (player in artGallery) <<WaveObject artGallerySarah>>;
+        if (player in tattooShop) <<WaveObject tattooShopNick>>;
+        if (player in convenienceStore) {
+            if (basement.firstTime) <<WaveObject convenienceStoreOldAmy>>;
+            if (convenienceStoreKid in convenienceStore) <<WaveObject convenienceStoreKid>>;
+            if (convenienceStoreAmy in convenienceStore) <<WaveObject convenienceStoreAmy>>;
+        }
+        if (player in madameSorras) {
+            if (basement.firstTime) <<WaveObject oldMadameSorra>>;
+            if (madameSorrasMadameSorra in madameSorras) <<WaveObject madameSorrasMadameSorra>>;
+        }
+        if (player in smallPark) {
+            if (smallParkEddie in smallPark) <<WaveObject smallParkEddie>>;
+        }
+        if (player in theTavern) {
+            if (theTavernHarry in theTavern) <<WaveObject theTavernHarry>>;
+            if (theTavernNick in theTavern) <<WaveObject theTavernNick>>;
+        }
+        if (player in mapleRoad) {
+            if (mapleRoadTom in mapleRoad) <<WaveObject mapleRoadTom>>;
+        }
+        if (player in alleyBar) <<WaveObject alleyBarPhil>>;
+        if (player in alleyRental) <<WaveObject alleyRentalNancy>>;
+        if (player in bowlingAlley) {
+            if (bowlingAlleyKids in bowlingAlley) <<WaveObject bowlingAlleyKids>>;
+            "You wave, but no one cares.";
+        }
+        if (player in outsideComplex) <<WaveObject outsideComplexDoorman>>;
+        "You wave, but no one is around to notice.";
+  ];
+
+  [ WaveObjectSub; "There's no reaction."; ];
+
+  [ XYZZYSub; "You think to yourself about an old text adventure. Thank God you're not trapped in some maze."; ];
+
+  [ VerbsSub; CommonVerbsPrint(); ];
+
+  Include "GrammarTEMPORAL";
+
+! ---------------------------------------------------------------------------- !
+!       VERBS
+!  scope=TopicScope  in  Answer / Ask / Bother / Consult / Read / Tell
+
+Verb 'answer' 'say' 'shout' 'speak'
+    * scope=TopicScope 'to' creature            -> Answer;
+Verb 'ask'
+    * creature 'about' topic                    -> Ask
+    * creature 'to' scope=TopicScope            -> AskTo
+    * creature 'for' topic                      -> AskCreatureFor
+    * creature topic                            -> Ask                      ! Needs to be on the bottom so it doesn't trigger first
+    * 'about' topic                             -> AskAboutTopic
+    * 'for' topic                               -> AskForTopic
+    * topic                                     -> AskAboutTopic;
+Verb 'a//'
+    * creature 'about' topic                    -> Ask
+    * creature topic                            -> Ask
+    * 'about' topic                             -> AskAboutTopic
+    * 'for' topic                               -> AskForTopic
+    * topic                                     -> AskAboutTopic;
+
+Verb 'attack' 'break' 'crack' 'destroy'
+     'fight' 'hit' 'kill' 'murder' 'punch' 'shatter'
+     'smash' 'thump' 'torture' 'wreck'
+    * noun                                      -> Attack;
+Verb 'blow'
+    * noun                                      -> Blow;
+Verb 'bother' 'curses' 'darn' 'drat'
+    *                                           -> Mild
+    * topic                                     -> Mild;
+Verb 'burn' 'light'
+    * noun                                      -> Burn
+    * noun 'with' held                          -> Burn;
+Verb 'buy' 'purchase' 'pay'
+    * noun                                      -> Buy
+    * 'for' noun                                -> Buy
+    * creature 'for' noun                       -> Buy;
+Verb 'climb' 'scale'
+    * noun                                      -> Climb
+    * 'up'/'over' noun                          -> Climb;
+Verb 'close' 'cover' 'shut'
+    * noun                                      -> Close
+    * 'up' noun                                 -> Close
+    * 'off' noun                                -> SwitchOff;
+Verb 'consult'
+    * noun 'about' topic                        -> Consult
+    * noun 'on' topic                           -> Consult;
+Verb 'credits' 'credit'
+    *                                           -> Credits;
+Verb 'cut' 'chop' 'prune' 'slice'
+    * noun                                      -> Cut;
+Verb 'dig'
+    * noun                                      -> Dig
+    * noun 'with' held                          -> Dig;
+Verb 'drink' 'sip' 'swallow'
+    * noun                                      -> Drink;
+Verb 'drop' 'discard'
+    * multiheld                                 -> Drop
+    * multiexcept 'in'/'into'/'down' noun       -> Insert
+    * multiexcept 'on'/'onto' noun              -> PutOn;
+Verb 'throw'
+    * held 'at'/'against'/'on'/'onto' noun      -> ThrowAt;
+Verb 'eat'
+    * creature                                  -> Eat
+    * held                                      -> Eat;
+Verb 'empty'
+    * noun                                      -> Empty
+    * 'out' noun                                -> Empty
+    * noun 'out'                                -> Empty
+    * noun 'to'/'into'/'on'/'onto' noun         -> EmptyT;
+Verb 'enter' 'cross'
+    *                                           -> GoIn
+    * noun                                      -> Enter;
+Verb 'examine' 'x//' 'check' 'describe' 'watch'
+    * noun                                      -> Examine;
+Verb 'exit' 'out' 'outside'
+    *                                           -> Exit
+    * noun                                      -> Exit;
+Verb 'fill'
+    * noun                                      -> Fill;
+Verb 'fix'
+    * noun                                      -> Fix;
+Verb 'follow'
+    * noun                                      -> Follow;
+Verb 'get'
+    * 'out'/'off'/'up'                          -> Exit
+    * multi                                     -> Take
+    * 'in'/'into'/'on'/'onto' noun              -> Enter
+    * 'off' noun                                -> GetOff
+    * multiinside 'from' noun                   -> Remove;
+Verb 'give' 'feed' 'offer' 'trade'
+    * held 'to' creature                        -> Give
+    * creature held                             -> Give reverse
+    * 'over' held 'to' creature                 -> Give;
+Verb 'go' 'run' 'walk'
+    *                                           -> VagueGo
+    * noun=ADirection                           -> Go
+    * noun                                      -> Enter
+    * 'behind' noun                             -> GoBehind
+    * 'to' noun                                 -> Enter
+    * 'into'/'in'/'inside'/'through' noun       -> Enter;
+Verb 'hello'
+    * creature                                  -> Hello;
+Verb 'in' 'inside'
+    *                                           -> GoIn;
+Verb 'info' 'about'
+    *                                           -> AboutGame
+    * 'game'                                    -> AboutGame
+    * 'the' 'game'                              -> AboutGame;
+Verb 'insert'
+    * multiexcept 'in'/'into' noun              -> Insert;
+Verb 'inventory' 'inv' 'i//'
+    *                                           -> Inv
+    * 'tall'                                    -> InvTall
+    * 'wide'                                    -> InvWide;
+Verb 'jump' 'hop' 'skip'
+    *                                           -> Jump
+    * noun                                      -> JumpOver
+    * 'over' noun                               -> JumpOver
+        * 'off' noun                                -> JumpOver;
+Verb 'kick'
+    * noun                                      -> Kick;
+Verb 'kiss' 'embrace' 'hug'
+    * creature                                  -> Kiss;
+Verb 'knock'
+    * noun                                      -> Knock
+    * 'on' noun                                 -> Knock;
+Verb 'leave'
+    *                                           -> VagueGo
+    * noun=ADirection                           -> Go
+    * noun                                      -> Exit
+    * 'into'/'in'/'inside'/'through' noun       -> Enter;
+Verb 'listen' 'hear'
+    *                                           -> Listen
+    * noun                                      -> Listen
+    * 'to' noun                                 -> Listen;
+Verb 'lock'
+    * noun 'with' held                          -> Lock;
+Verb 'look' 'l//'
+    *                                           -> Look
+    * noun                                      -> Examine
+    * 'at' noun                                 -> Examine
+    * 'inside'/'in'/'into'/'through'/'on' noun  -> Search
+    * 'under' noun                              -> LookUnder
+    * 'up' topic 'in' noun                      -> Consult reverse
+    * noun=ADirection                           -> Examine
+    * 'to' noun=ADirection                      -> Examine;
+Verb 'no'
+    *                                           -> No;
+Verb 'open' 'uncover' 'unwrap'
+    * noun                                      -> Open
+    * noun 'with' held                          -> Unlock;
+Verb 'peel'
+    * noun                                      -> Take
+    * 'off' noun                                -> Take;
+Verb 'pet'
+    * noun                                      -> Pet;
+Verb 'pick'
+    * 'up' multi                                -> Take
+    * multi 'up'                                -> Take;
+Verb 'play'
+    * noun                                      -> Play
+    * 'with' noun                               -> Play;
+Verb 'pray'
+    *                                           -> Pray;
+Verb 'pry' 'prise' 'prize' 'lever' 'jemmy' 'force'
+    * noun 'with' held                          -> Unlock
+    * 'apart'/'open' noun 'with' held           -> Unlock
+    * noun 'apart'/'open' 'with' held           -> Unlock;
+Verb 'pull' 'drag'
+    * noun                                      -> Pull
+    * 'out' noun                                -> Pull;
+Verb 'push' 'clear' 'move' 'press' 'shift'
+    * noun                                      -> Push
+    * noun noun                                 -> PushDir
+    * noun 'to' noun                            -> Transfer;
+Verb 'put'
+    * multiexcept 'in'/'inside'/'into' noun     -> Insert
+    * multiexcept 'on'/'onto' noun              -> PutOn
+    * 'on' held                                 -> Wear
+    * 'down' multiheld                          -> Drop
+    * multiheld 'down'                          -> Drop;
+Verb 'read'
+    * noun                                      -> Read
+    * 'about' topic 'in' noun                   -> Consult reverse
+    * topic 'in' noun                           -> Consult reverse;
+Verb 'remove'
+    * held                                      -> Remove
+    * multi                                     -> Remove
+    * multiinside 'from' noun                   -> Remove;
+Verb 'rent'
+    * noun                                      -> Rent;
+Verb 'replace'
+    * noun                                      -> Replace;
+Verb 'ride'
+    * noun                                      -> Ride;
+Verb 'ring'
+    * noun                                      -> Push;
+Verb 'rub' 'clean' 'dust' 'polish' 'scrub'
+     'shine' 'sweep' 'wipe'
+    * noun                                      -> Rub;
+Verb 'search'
+    * noun                                      -> Search;
+Verb 'set' 'adjust'
+    * noun                                      -> Set
+    * noun 'to' special                         -> SetTo;
+Verb 'shed' 'disrobe' 'doff'
+    * held                                      -> Disrobe;
+Verb 'show' 'display' 'present'
+    * creature noun                             -> Show reverse
+    * noun 'to' creature                        -> Show;
+Verb 'shit' 'damn' 'fuck' 'sod'
+    *                                           -> Strong
+    * topic                                     -> Strong;
+Verb 'sing'
+    *                                           -> Sing;
+Verb 'sit' 'lie'
+    * 'on' 'top' 'of' noun                      -> Enter
+    * 'on'/'in'/'inside'/'at' noun              -> Enter
+    * 'down' 'on' noun                          -> Enter;
+Verb 'sleep' 'nap'
+    *                                           -> Sleep;
+Verb 'smell' 'sniff'
+    *                                           -> Smell
+    * noun                                      -> SmellNoun;
+Verb 'sorry'
+    *                                           -> Sorry;
+Verb 'squeeze' 'squash'
+    * noun                                      -> Squeeze;
+Verb 'stand'
+    *                                           -> Exit
+    * 'up'                                      -> Exit
+    * 'on' noun                                 -> Enter;
+Verb 'swim' 'dive'
+    *                                           -> Swim;
+Verb 'swing'
+    * noun                                      -> Swing
+    * 'on' noun                                 -> Swing;
+Verb 'switch'
+    * noun                                      -> Switchon
+    * noun 'on'                                 -> Switchon
+    * noun 'off'                                -> Switchoff
+    * 'on' noun                                 -> Switchon
+    * 'off' noun                                -> Switchoff;
+Verb 'take' 'carry' 'hold'
+    * multi                                     -> Take
+    * 'off' worn                                -> Disrobe
+    * multiinside 'from' noun                   -> Remove
+    * multiinside 'off' noun                    -> Remove
+    * 'inventory'                               -> Inv;
+Verb 'talk'
+    * 'to' creature                             -> Talk;
+Verb 'taste'
+    * noun                                      -> Taste;
+Verb 'tell'
+    * creature 'about' topic                    -> Tell
+    * creature topic                            -> Tell                   ! Needs to be on the bottom so it doesn't trigger first
+    * 'about' topic                             -> TellAboutTopic
+    * topic                                     -> TellAboutTopic;
+Verb 't//'
+    * creature 'about' topic                    -> Tell
+    * creature topic                            -> Tell
+    * 'about' topic                             -> TellAboutTopic
+    * topic                                     -> TellAboutTopic;
+Verb 'think'
+    *                                           -> Think;
+Verb 'tie' 'attach' 'fasten'
+    * noun                                      -> Tie
+    * noun 'to' noun                            -> Tie;
+Verb 'touch' 'feel' 'fondle' 'grope'
+    * noun                                      -> Touch;
+Verb 'transfer'
+    * noun 'to' noun                            -> Transfer;
+Verb 'turn' 'rotate' 'screw' 'twist' 'unscrew'
+    * noun                                      -> Turn
+    * noun 'on'                                 -> Switchon
+    * noun 'off'                                -> Switchoff
+    * 'on' noun                                 -> Switchon
+    * 'off' noun                                -> Switchoff;
+Verb 'wave'
+    *                                           -> WaveHandsRoom
+    * noun                                      -> Wave
+    * 'to'/'at' creature                        -> WaveObject
+    * 'hands' 'at' creature                     -> WaveObject;
+Verb 'wear' 'don'
+    * held                                      -> Wear;
+Verb 'yes' 'y//'
+    *                                           -> Yes;
+!Verb 'undo'
+!    *                                           -> UndoCommand;
+Verb 'unlock'
+    * noun 'with' held                          -> Unlock;
+Verb 'verb' 'verbs'
+    *                                           -> Verbs;
+Verb 'wait' 'z//'
+    *                                           -> Wait;
+Verb 'wake' 'awake' 'awaken'
+    *                                           -> Wake
+    * 'up'                                      -> Wake
+    * creature                                  -> WakeOther
+    * creature 'up'                             -> WakeOther
+    * 'up' creature                             -> WakeOther;
+
+Verb 'xyzzy' 'plugh' 'plover'
+    *                                           -> XYZZY;
+
+! ---------------------------------------------------------------------------- !
+!       CONVERSATIONAL TOPICS
+!
+
+  Object  Topics "conversational topics";
+  !Object  -> t_him with name 'him';
+  !Object  -> t_her with name 'her';
+  !Object  -> t_them with name 'them';
+  !Object  -> t_himself with name 'himself';
+  !Object  -> t_herself with name 'herself';
+  !Object  -> t_person with name 'person';
+  !Object  -> t_self with name 'self';
+
+  Object  -> t_yes with name 'yes' 'please' 'ok';
+  Object  -> t_no with name 'no';
+  Object  -> t_hi with name 'hi' 'hello' 'hola' 'greetings';
+  Object  -> t_thanks with name 'thank' 'thanks';
+  Object  -> t_sorry with name 'sorry';
+  Object  -> t_good with name 'good';
+  Object  -> t_bad with name 'bad';
+  !Object  -> t_stop with name 'stop';
+  Object  -> t_goodbye with name 'goodbye' 'goodby' 'good-bye' 'bye' 'cheerio';
+  !Object  -> t_cigs with name 'cigarette' 'cigarettes' 'cig' 'cigs' 'fag' 'fags' 'smokes';
+  !Object  -> t_city with name 'city' 'town' 'sunnybrook';
+  Object  -> t_bowl with name 'bowl';
+  !Object  -> t_phone with name 'phone' 'iphone';
+  !Object  -> t_arcade with name 'arcade' 'game' 'asteroids';
+  !Object  -> t_machine with name 'time' 'machine';
+  !Object  -> t_notes with name 'note' 'notes';
+  !Object  -> t_house with name 'house' 'abandoned';
+  !Object  -> t_rental with name 'rental' 'rentals';
+  !Object  -> t_work with name 'work' 'job' 'shop' 'place';
+  !Object  -> t_nyc with name 'new' 'york' 'nyc';
+  !Object  -> t_model with name 'model' 'modeling' 'modelling';
+  !Object  -> t_la with name 'los' 'angeles' 'la';
+  !Object  -> t_can with name 'freshener' 'can' 'spray';
+  !Object  -> t_number with name 'number' 'numbers';
+  !Object  -> t_keypad with name 'keypad' 'pad';
+  !Object  -> t_shoes with name 'shoe' 'shoes';
+  !Object  -> t_hell with name 'hell';
+  !Object  -> t_renting with name 'rent' 'renting';
+  !Object  -> t_food with name 'junk' 'food';
+  !Object  -> t_burger with name 'burger' 'burgers';
+  !Object  -> t_scientist with name 'scientist';
+  !Object  -> t_tv with name 'tele' 'television' 'tv';
+  Object  -> t_drink with name 'cold' 'drink' 'drinks' 'bottle';
+  !Object  -> t_patron with name 'patron';
+  !Object  -> t_music with name 'music' 'tunes' 'heavy' 'metal' 'rock';
+  !Object  -> t_amp with name 'amp' 'rig' 'marshall' 'half' 'stack' 'half-stack';
+  !Object  -> t_band with name 'band' 'bands';
+  !Object  -> t_stage with name 'stage' 'riser';
+  !Object  -> t_snack with name  'snack' 'snacks' 'bars';
+  !Object  -> t_chocolate with name  'chocolate' 'candy';
+  !Object  -> t_box with name 'missing' 'box';
+  !Object  -> t_beef with name 'sealed' 'beef' 'jerky' 'plastic' 'meat' 'stick' 'sticks';
+  !Object  -> t_pack with name 'pack' 'packs';
+  Object  -> t_booze with name 'alcohol' 'booze';
+  Object  -> t_whiskey with name 'whiskey' 'whisky';
+  Object  -> t_scotch with name 'scotch';
+  Object  -> t_vodka with name 'vodka';
+  !Object  -> t_beer with name 'beer';
+  !Object  -> t_shot with name 'shot';
+  !Object  -> t_pitcher with name 'pitcher';
+  !Object  -> t_taps with name 'taps';
+  !Object  -> t_pepper with name 'dr' 'pepper';
+  !Object  -> t_reading with name 'palm' 'reading';
+  !Object  -> t_lifeline with name 'life' 'line' 'lifeline';
+  !Object  -> t_crystal with name 'crystal' 'crystals';
+  !Object  -> t_ball with name 'ball';
+  !Object  -> t_scarf with name 'scarf' 'babushka' 'headscarf' 'stole' 'muffler' 'tippet' 'kerchief' 'bandanna';
+  !Object  -> t_bathroom with name 'bathroom' 'lavatory' 'washroom' 'head';
+  !Object  -> t_car with name 'car' 'mercury';
+  !Object  -> t_cat with name 'cat';
+  !Object  -> t_statue with name 'statue';
+  !Object  -> t_sculpture with name 'sculpture';
+  !Object  -> t_sculptor with name 'sculptor' 'sculptors';
+  !Object  -> t_zeppelin with name 'led' 'zeppelin';
+  !Object  -> t_price with name 'price' 'cost';
+  !Object  -> t_incense with name 'incense' 'nag' 'champa' 'gonesh';
+  !Object  -> t_vagabonds with name 'vagabonds';
+  !Object  -> t_locals with name 'locals';
+  !Object  -> t_guitar with name 'guitar' 'ax' 'axe';
+  !Object  -> t_wildorchid with name 'wild' 'orchid';
+  !Object  -> t_key with name 'key';
+  !Object  -> t_coke with name 'coke' 'cokes' 'cola';
+  !Object  -> t_soda with name 'soda' 'pop';
+  Object  -> t_jack with name 'jack' 'daniel' 'daniels' 'daniel^s' 'daniel?s';
+  !Object  -> t_watch with name 'watch' 'digital' 'casio';
+  !Object  -> t_customers with name 'customer' 'customers';
+  !Object  -> t_kitchen with name 'kitchen';
+  !Object  -> t_star with name 'star' 'wars';
+  !Object  -> t_empire with name 'empire' 'strikes' 'back';
+  !Object  -> t_shirt with name 'shirt' 't-shirt';
+  !Object  -> t_movie with name 'movie';
+  !Object  -> t_maiden with name 'iron' 'maiden';
+  !Object  -> t_eighttrack with name '8-track' 'tape' 'deck' 'cartridge';
+  !Object  -> t_coin with name 'coin';
+  !Object  -> t_pops with name 'pops';
+  !Object  -> t_arsenic with name 'arsenic';
+  !Object  -> t_pump with name 'pump' 'pumps';
+  !Object  -> t_engine with name 'engine';
+  !Object  -> t_radiator with name 'radiator';
+  !Object  -> t_storm with name 'lightning' 'storm';
+  !Object  -> t_change with name 'change' 'quarters' 'quarter';
+
+  !Object  -> t_future with name 'future';
+  !Object  -> t_fortune with name 'fortune';
+
+  !Object  -> t_basement with name 'basement';
+  !Object  -> t_mabel with name 'mabel';
+
+  !Object  -> t_dollar with name 'dollar' 'buck';
+  !Object  -> t_comic with name 'comic' 'comics' 'book' 'books';
+  !Object  -> t_past with name 'past-dated' 'past' 'dated' 'ones';
+  !Object  -> t_conan with name 'conan';
+  !Object  -> t_woman with name 'wonder' 'woman';
+  !Object  -> t_soldier with name 'unknown' 'soldier';
+  !Object  -> t_xmen with name 'xmen' 'x-men';
+  !Object  -> t_diana with name 'diana' 'prince';
+  !Object  -> t_lasso with name 'lasso';
+
+  !Object  -> t_brother with name 'brother';
+  !Object  -> t_family with name 'family';
+  !Object  -> t_writing with name 'writing';
+
+  !Object  -> t_hand with name 'hand' 'hands';
+  !Object  -> t_name with name 'name';
+  !Object  -> t_sam with name 'sam';
+  !Object  -> t_judy with name 'judy';
+  !Object  -> t_sorra with name 'madame' 'sorra' 'gypsy' 'fortune-teller' 'teller';
+  !Object  -> t_mother with name 'mother';
+  !Object  -> t_scry with name 'scry' 'scrying';
+  !Object  -> t_romania with name 'romania' 'motherland';
+
+  !Object  -> t_bum with name 'bum' 'ed' 'eddie';
+  !Object  -> t_harry with name 'harry';
+  !Object  -> t_guy with name 'old' 'guy';
+  !Object  -> t_wife with name 'wife';
+  !Object  -> t_martha with name 'martha';
+
+  !Object  -> t_yukypah with name 'yukypah' 'heef';
+  !Object  -> t_graffiti with name 'graffiti';
+  !Object  -> t_melville with name 'melville' 'melvill';
+
+  !Object  -> t_attendant with name 'attendant';
+  !Object  -> t_jerry with name 'jerry';
+  !Object  -> t_fight with name 'fight';
+
+  !Object  -> t_bill with name 'bill';
+  !Object  -> t_owner with name 'owner';
+  !Object  -> t_boss with name 'boss';
+
+  !Object  -> t_nancy with name 'nancy' 'punk';
+  !Object  -> t_bartender with name 'bartender';
+  !Object  -> t_phil with name 'phil' 'phill';
+
+  !Object  -> t_nick with name 'nick';
+  !Object  -> t_angel with name 'steve';
+  !Object  -> t_boy with name 'pretty' 'boy';
+  !Object  -> t_biker with name 'biker';
+
+  !Object  -> t_clerk with name 'clerk';
+  !Object  -> t_amy with name 'amy';
+  !Object  -> t_girl with name 'girl';
+  !Object  -> t_jane with name 'plain' 'jane';
+
+  !Object  -> t_curator with name 'curator';
+  !Object  -> t_sarah with name 'sarah';
+  !Object  -> t_smell with name 'smell';
+  !Object  -> t_woman with name 'wonder' 'woman';
+  !Object  -> t_necklaces with name 'necklace' 'necklaces';
+  !Object  -> t_doorman with name 'doorman';
+  !Object  -> t_mark with name 'mark';
+  !Object  -> t_tom with name 'tom';
+
+  !Object  -> t_alley with name 'bowling' 'alley';
+  !Object  -> t_bar with name 'bar';
+  !Object  -> t_tavern with name 'tavern';
+  !Object  -> t_library with name 'library';
+  !Object  -> t_store with name 'convenience' 'drug' 'store';
+  !Object  -> t_office with name 'post' 'office';
+  !Object  -> t_school with name 'school';
+  !Object  -> t_undergrad with name 'undergrad';
+  !Object  -> t_yard with name 'yard' 'junkyard' 'millers' 'miller' 'miller^s' 'miller?s';
+  !Object  -> t_dog with name 'dog' 'doberman';
+  !Object  -> t_station with name 'gas' 'station';
+  !Object  -> t_college with name 'college';
+  !Object  -> t_gallery with name 'gallery';
+  !Object  -> t_commune with name 'commune';
+  !Object  -> t_berkeley with name 'berkeley';
+  !Object  -> t_pharmacy with name 'pharmacy';
+  !Object  -> t_art with name 'art';
+  !Object  -> t_monkey with name 'crazy' 'monkey';
+  !Object  -> t_date with name 'current' 'date' 'year';
+  !Object  -> t_complex with name 'complex' 'high-rise' 'highrise' 'highland' 'towers';
+  !Object  -> t_park with name 'trailer' 'park';
+  !Object  -> t_bus with name 'bus';
+  !Object  -> t_springfield with name 'springfield';
+  !Object  -> t_cousin with name 'cousin';
+
+  !Object  -> t_plug with name 'plug' 'spark' 'sparkplug';
+  !Object  -> t_shard with name 'shard';
+  !Object  -> t_tube with name 'vacuum' 'tube' 'tubes';
+
+  !Object  -> t_california with name 'california' 'cali';
+  !Object  -> t_friend with name 'friend';
+  !Object  -> t_dish with name 'dish' 'dishes';
+  !Object  -> t_glasses with name 'glass' 'glasses';
+  !Object  -> t_tattoo with name 'tattoo' 'tatoo' 'tattoos' 'tatoos' 'tattoing';
+  !Object  -> t_magazine with name 'magazine' 'mag';
+  !Object  -> t_vest with name 'vest' 'colors';
+  !Object  -> t_notebook with name 'notebook';
+  !Object  -> t_kerouac with name 'kerouac' 'kerou';
+  !Object  -> t_diner with name 'diner';
+  !Object  -> t_gov with name 'government' 'gov';
+  !Object  -> t_ufo with name 'ufo' 'ufos';
+  !Object  -> t_sky with name 'sky';
+  !Object  -> t_lights with name 'light' 'lights';
+  !Object  -> t_shower with name 'meteor' 'meteors' 'shower' 'showers';
+  !Object  -> t_mothership with name 'mothership' 'ship';
+  !Object  -> t_alien with name 'alien' 'aliens';
+  !Object  -> t_flask with name 'flask';
